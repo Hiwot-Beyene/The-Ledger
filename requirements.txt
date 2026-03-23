@@ -1,21 +1,25 @@
 # Core
-asyncpg>=0.31.0,<0.32
+asyncpg>=0.29.0,<0.30
 anthropic>=0.30.0,<0.40
 pydantic>=2.6.0,<3.0
-langgraph>=0.1.0,<0.3
+langgraph>=0.2.0,<0.3
 
 # Data generation
-faker>=24.0.0,<26.0
+faker>=24.0.0,<25.0
 reportlab>=4.2.0,<5.0
 openpyxl>=3.1.0,<4.0
 
 # MCP server (Phase 5)
-fastmcp>=0.9.0
+fastmcp>=0.9.0,<1.0
+
+# Staff HTTP API (portal)
+fastapi>=0.115.0,<0.116
+uvicorn[standard]>=0.35.0,<0.40
 
 # Dev / test
 python-dotenv>=1.0.0,<2.0
 pytest>=8.0.0,<9.0
-pytest-asyncio>=0.23.0,<0.25
+pytest-asyncio>=0.23.0,<0.24
 
 # Your Week 3 pipeline (uncomment the one you used):
 # mineru>=1.0
