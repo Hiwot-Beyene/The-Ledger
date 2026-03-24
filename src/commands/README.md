@@ -12,9 +12,9 @@ Configure in app wiring, e.g. `logging.getLogger("ledger.commands").setLevel(log
 
 ## Tests
 
-`tests/test_command_handlers.py` — per-handler happy paths, guard failures (duplicate submit, credit state, model version, Gas Town, decision causal chain, compliance), load order, `correlation_id` / `causation_id`, observability (`caplog`).
+`tests/phase2/test_command_handlers.py` — per-handler happy paths, guard failures (duplicate submit, credit state, model version, Gas Town, decision causal chain, compliance), load order, `correlation_id` / `causation_id`, observability (`caplog`).
 
 ```bash
-pytest tests/test_command_handlers.py -v
+pytest tests/phase2/test_command_handlers.py -v
 pytest -m command_handler -v
 ```

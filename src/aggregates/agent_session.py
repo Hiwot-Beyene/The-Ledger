@@ -3,12 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
-from ledger.domain.aggregates.replay import (
+from aggregates.replay import (
     advance_version_from_stored,
     event_type_from_stored,
     payload_from_stored,
 )
-from ledger.schema.events import DomainError, StoredEvent
+from models.events import DomainError, StoredEvent
 
 DECISION_TRACE_EVENT_TYPES = frozenset(
     {
@@ -111,6 +111,7 @@ class AgentSessionAggregate:
             self.context_declared_first = True
         self.context_loaded = True
         self.model_version = str(payload.get("model_version", ""))
+        self._track_application_from_payload(payload)
 
     def _on_AgentSessionStarted(self, event: StoredEvent | dict[str, Any]) -> None:
         payload = payload_from_stored(event)

@@ -1,5 +1,5 @@
 """
-ledger/schema/events.py
+src/models/events.py
 =======================
 CANONICAL EVENT SCHEMA — THE LEDGER (WEEKS 9-10)
 
@@ -24,8 +24,8 @@ Registry evolution policy:
 - Every new domain event class must be added to EVENT_REGISTRY in this file.
 - Keep event_type string and class default aligned exactly.
 - Remove registry entries only after all historical events are migrated.
-- Run validate_event_registry() in CI (see tests/test_event_registry.py) so drift is caught immediately.
-- Prefer ``ledger/schema/event_factories.py`` for command → append payloads so shapes stay aligned with these models.
+- Run validate_event_registry() in CI (see tests/phase2/test_event_registry.py) so drift is caught immediately.
+- Prefer ``src/models/event_factories.py`` for command → append payloads so shapes stay aligned with these models.
 - Loan-path invariants on models: ``ApplicationSubmitted.requested_amount_usd`` > 0; ``DecisionGenerated`` uses ``DecisionRecommendation`` and ``confidence_score`` ∈ [0,1]; optional ``CreditAnalysisCompleted`` tier/confidence bounds.
 """
 from __future__ import annotations

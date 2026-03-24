@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Any
 
-from ledger.schema.events import (
+from models.events import (
     ApplicationApproved,
     ApplicationSubmitted,
     ComplianceCheckRequested,
@@ -14,6 +14,9 @@ from ledger.schema.events import (
     CreditAnalysisRequested,
     DecisionGenerated,
     DecisionRequested,
+    DocumentType,
+    DocumentUploadRequested,
+    LoanPurpose,
 )
 
 
@@ -70,12 +73,43 @@ def store_dict_application_submitted(
     requested_amount_usd: Decimal | float | int,
     *,
     submitted_at: datetime | None = None,
+    loan_purpose: str | None = None,
+    loan_term_months: int | None = None,
+    submission_channel: str | None = None,
+    contact_email: str | None = None,
+    contact_name: str | None = None,
+    application_reference: str | None = None,
 ) -> dict[str, Any]:
+    lp: LoanPurpose | None = LoanPurpose(loan_purpose) if loan_purpose else None
     return ApplicationSubmitted(
         application_id=application_id,
         applicant_id=applicant_id,
         requested_amount_usd=Decimal(str(requested_amount_usd)),
         submitted_at=submitted_at or datetime.now(UTC),
+        loan_purpose=lp,
+        loan_term_months=loan_term_months,
+        submission_channel=submission_channel,
+        contact_email=contact_email,
+        contact_name=contact_name,
+        application_reference=application_reference or application_id,
+    ).to_store_dict()
+
+
+def store_dict_document_upload_requested(
+    application_id: str,
+    *,
+    deadline: datetime | None = None,
+    requested_by: str = "system",
+) -> dict[str, Any]:
+    return DocumentUploadRequested(
+        application_id=application_id,
+        required_document_types=[
+            DocumentType.APPLICATION_PROPOSAL,
+            DocumentType.INCOME_STATEMENT,
+            DocumentType.BALANCE_SHEET,
+        ],
+        deadline=deadline or (datetime.now(UTC) + timedelta(days=7)),
+        requested_by=requested_by,
     ).to_store_dict()
 
 

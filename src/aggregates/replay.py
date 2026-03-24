@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ledger.schema.events import StoredEvent
+from models.events import StoredEvent
 
 
 def payload_from_stored(event: StoredEvent | dict[str, Any]) -> dict[str, Any]:

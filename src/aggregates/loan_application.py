@@ -4,8 +4,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Protocol
 
-from ledger.domain.aggregates.compliance_record import ComplianceRecordAggregate
-from ledger.domain.aggregates.replay import (
+from aggregates.compliance_record import ComplianceRecordAggregate
+from aggregates.replay import (
     advance_version_from_stored,
     event_type_from_stored,
     optional_float,
@@ -13,7 +13,7 @@ from ledger.domain.aggregates.replay import (
     payload_from_stored,
     rules_evaluate_ids,
 )
-from ledger.schema.events import DomainError, StoredEvent
+from models.events import DomainError, StoredEvent
 
 
 def _decision_confidence_and_recommendation(payload: dict[str, Any]) -> tuple[float, str]:
@@ -46,6 +46,8 @@ VALID_TRANSITIONS: dict[ApplicationState, set[ApplicationState]] = {
         ApplicationState.PENDING_DECISION,
         ApplicationState.APPROVED_PENDING_HUMAN,
         ApplicationState.DECLINED_PENDING_HUMAN,
+        ApplicationState.FINAL_APPROVED,
+        ApplicationState.FINAL_DECLINED,
     },
     ApplicationState.APPROVED_PENDING_HUMAN: {
         ApplicationState.FINAL_APPROVED,
@@ -184,12 +186,22 @@ class LoanApplicationAggregate:
         payload = payload_from_stored(event)
         confidence, recommendation = _decision_confidence_and_recommendation(payload)
         self.assert_decision_recommendation_valid(recommendation, confidence)
-        if recommendation == "APPROVE":
-            self._transition(ApplicationState.APPROVED_PENDING_HUMAN, STATE_RULE)
-        elif recommendation == "DECLINE":
-            self._transition(ApplicationState.DECLINED_PENDING_HUMAN, STATE_RULE)
-        else:
+        # DecisionRequested may be missing on the loan stream; APPROVE/DECLINE cannot jump
+        # COMPLIANCE_REVIEW → APPROVED_PENDING_HUMAN (only PENDING_DECISION is allowed from there).
+        if self.state == ApplicationState.COMPLIANCE_REVIEW:
             self._transition(ApplicationState.PENDING_DECISION, STATE_RULE)
+        if recommendation == "APPROVE":
+            if self.state != ApplicationState.APPROVED_PENDING_HUMAN:
+                self._transition(ApplicationState.APPROVED_PENDING_HUMAN, STATE_RULE)
+        elif recommendation == "DECLINE":
+            if self.state != ApplicationState.DECLINED_PENDING_HUMAN:
+                self._transition(ApplicationState.DECLINED_PENDING_HUMAN, STATE_RULE)
+        else:
+            if (
+                self.state != ApplicationState.PENDING_DECISION
+                and ApplicationState.PENDING_DECISION in VALID_TRANSITIONS.get(self.state, set())
+            ):
+                self._transition(ApplicationState.PENDING_DECISION, STATE_RULE)
         self.last_decision_recommendation = recommendation
 
     def _on_HumanReviewOverride(self, event: StoredEvent | dict[str, Any]) -> None:
@@ -238,6 +250,15 @@ class LoanApplicationAggregate:
         if confidence_score < 0.6 and recommendation != "REFER":
             self._raise_domain_error("confidence_floor_violation", CONFIDENCE_RULE)
 
+    def assert_valid_orchestrator_decision(
+        self, raw_recommendation: str, confidence_score: float
+    ) -> str:
+        recommendation = raw_recommendation.upper()
+        if confidence_score < 0.6:
+            recommendation = "REFER"
+        self.assert_decision_recommendation_valid(recommendation, confidence_score)
+        return recommendation
+
     def assert_new_application_stream(self) -> None:
         if self.version != -1:
             self._raise_domain_error(
@@ -247,11 +268,7 @@ class LoanApplicationAggregate:
             )
 
     def effective_decision_recommendation(self, raw_recommendation: str, confidence_score: float) -> str:
-        recommendation = raw_recommendation.upper()
-        if confidence_score < 0.6:
-            recommendation = "REFER"
-        self.assert_decision_recommendation_valid(recommendation, confidence_score)
-        return recommendation
+        return self.assert_valid_orchestrator_decision(raw_recommendation, confidence_score)
 
     def assert_may_append_application_approved(
         self,
