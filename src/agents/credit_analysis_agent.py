@@ -1,5 +1,5 @@
 """
-ledger/agents/credit_analysis_agent.py
+src/agents/credit_analysis_agent.py
 =======================================
 CREDIT ANALYSIS AGENT — complete LangGraph reference implementation.
 
@@ -42,8 +42,9 @@ from uuid import uuid4
 
 from langgraph.graph import StateGraph, END
 
-from ledger.agents.base_agent import BaseApexAgent
-from ledger.schema.events import (
+from agents.base_agent import BaseApexAgent
+from aggregates.replay import event_type_from_stored, payload_from_stored
+from models.events import (
     CreditRecordOpened, HistoricalProfileConsumed, ExtractedFactsConsumed,
     CreditAnalysisCompleted, CreditAnalysisDeferred,
     FraudScreeningRequested,
@@ -120,19 +121,34 @@ class CreditAnalysisAgent(BaseApexAgent):
         app_id = state["application_id"]
         errors = []
 
-        # Load LoanApplicationAggregate to get applicant_id and amounts
-        # TODO: implement LoanApplicationAggregate.load()
-        # app = await LoanApplicationAggregate.load(self.store, app_id)
-        # if app.state not in (ApplicationState.DOCUMENTS_PROCESSED, ApplicationState.CREDIT_ANALYSIS_REQUESTED):
-        #     errors.append(f"Expected DOCUMENTS_PROCESSED, got {app.state}")
-        # state["applicant_id"]         = app.applicant_id
-        # state["requested_amount_usd"] = float(app.requested_amount_usd)
-        # state["loan_purpose"]         = app.loan_purpose.value
+        applicant_id: str | None = None
+        requested_amount_usd: float | None = None
+        loan_purpose: str | None = None
+        for event in await self.store.load_stream(f"loan-{app_id}"):
+            if event_type_from_stored(event) != "ApplicationSubmitted":
+                continue
+            pl = payload_from_stored(event)
+            applicant_id = pl.get("applicant_id") if pl.get("applicant_id") is not None else None
+            if applicant_id is not None:
+                applicant_id = str(applicant_id)
+            raw_amt = pl.get("requested_amount_usd")
+            if raw_amt is not None:
+                try:
+                    requested_amount_usd = float(raw_amt)
+                except (TypeError, ValueError):
+                    requested_amount_usd = None
+            lp = pl.get("loan_purpose")
+            loan_purpose = str(lp) if lp is not None and str(lp).strip() else None
+            break
 
-        # PLACEHOLDER — remove when LoanApplicationAggregate is implemented
-        state["applicant_id"]         = f"COMP-001"
-        state["requested_amount_usd"] = 500_000.0
-        state["loan_purpose"]         = "working_capital"
+        if not applicant_id:
+            errors.append("ApplicationSubmitted missing or has no applicant_id on loan stream")
+        if requested_amount_usd is None or requested_amount_usd <= 0:
+            errors.append("ApplicationSubmitted missing or invalid requested_amount_usd")
+
+        state["applicant_id"] = applicant_id
+        state["requested_amount_usd"] = requested_amount_usd
+        state["loan_purpose"] = loan_purpose
 
         # Verify package is ready
         # TODO: pkg = await DocumentPackageAggregate.load(self.store, app_id)
@@ -161,14 +177,25 @@ class CreditAnalysisAgent(BaseApexAgent):
         app_id = state["application_id"]
         credit_stream = f"credit-{app_id}"
 
+        existing = await self.store.load_stream(credit_stream)
+        if any(e.get("event_type") == "CreditRecordOpened" for e in existing):
+            ms = int((time.time() - t) * 1000)
+            await self._record_node_execution(
+                "open_credit_record",
+                ["application_id", "applicant_id"],
+                ["credit_record_opened"],
+                ms,
+            )
+            return state
+
         event = CreditRecordOpened(
             application_id=app_id,
             applicant_id=state["applicant_id"],
             opened_at=datetime.now(),
         ).to_store_dict()
 
-        # New stream — expected_version = -1
-        await self.store.append(credit_stream, [event], expected_version=-1)
+        ver = await self.store.stream_version(credit_stream)
+        await self.store.append(credit_stream, [event], expected_version=ver)
 
         ms = int((time.time() - t) * 1000)
         await self._record_node_execution(
@@ -314,92 +341,137 @@ class CreditAnalysisAgent(BaseApexAgent):
         return {**state, "extracted_facts": merged_facts, "quality_flags": quality_flags,
                 "document_ids_consumed": doc_ids}
 
-    # ── NODE 5: ANALYZE CREDIT RISK (LLM) ─────────────────────────────────────
+    # ── NODE 5: ANALYZE CREDIT RISK (deterministic) ──────────────────────────
     async def _node_analyze(self, state: CreditState) -> CreditState:
         t = time.time()
-        hist      = state.get("historical_financials") or []
-        facts     = state.get("extracted_facts") or {}
-        flags     = state.get("compliance_flags") or []
-        loans     = state.get("loan_history") or []
-        profile   = state.get("company_profile") or {}
-        q_flags   = state.get("quality_flags") or []
+        facts = state.get("extracted_facts") or {}
+        requested = float(state.get("requested_amount_usd") or 0.0)
+        q_flags = [str(x) for x in (state.get("quality_flags") or [])]
+        flags = state.get("compliance_flags") or []
+        loans = state.get("loan_history") or []
 
-        fins_table = "\n".join([
-            f"FY{f['fiscal_year']}: Revenue=${f.get('total_revenue',0):,.0f}"
-            f" EBITDA=${f.get('ebitda',0):,.0f}"
-            f" Net=${f.get('net_income',0):,.0f}"
-            f" D/E={f.get('debt_to_equity',0):.2f}x"
-            f" D/EBITDA={f.get('debt_to_ebitda',0):.2f}x"
-            for f in hist
-        ]) or "No historical data in registry"
+        def _f(v: object) -> float | None:
+            try:
+                if v is None or v == "":
+                    return None
+                return float(v)  # ok for Decimal/str/number
+            except Exception:
+                return None
 
-        SYSTEM = """You are a commercial credit analyst at Apex Financial Services.
-Evaluate the loan application and produce a CreditDecision as a JSON object.
+        revenue = _f(facts.get("total_revenue"))
+        net_income = _f(facts.get("net_income"))
+        ebitda = _f(facts.get("ebitda"))
+        assets = _f(facts.get("total_assets"))
+        liabilities = _f(facts.get("total_liabilities"))
 
-HARD POLICY RULES (enforce regardless of your reasoning):
-1. Maximum loan-to-revenue ratio: 0.35  (cap recommended_limit_usd at annual_revenue * 0.35)
-2. Minimum debt service coverage: 1.25x  (EBITDA / estimated annual payment)
-3. Any prior loan default → risk_tier must be HIGH
-4. Any ACTIVE compliance flag severity=HIGH → confidence must be ≤ 0.50
+        policy_overrides: list[str] = []
+        key_concerns: list[str] = []
+        data_quality: list[str] = []
 
-Respond ONLY with this JSON (no preamble):
-{
-  "risk_tier": "LOW" | "MEDIUM" | "HIGH",
-  "recommended_limit_usd": <integer>,
-  "confidence": <float 0.0–1.0>,
-  "rationale": "<3–5 sentences, plain English, readable by a loan officer>",
-  "key_concerns": ["<concern>"],
-  "data_quality_caveats": ["<caveat for any field with low extraction confidence>"],
-  "policy_overrides_applied": ["<rule ID if triggered>"]
-}"""
+        missing = [k for k in ("total_revenue", "net_income", "total_assets") if _f(facts.get(k)) is None]
+        if missing:
+            data_quality.append(f"Missing critical fields: {', '.join(missing)}")
+        if any("week3_pipeline_unavailable_or_failed" in f for f in q_flags):
+            data_quality.append("Week 3 extraction service unavailable; used fallback extraction.")
+        if any("critical_missing_field=" in f for f in q_flags):
+            data_quality.append("One or more critical fields were missing in extraction; confidence reduced.")
 
-        USER = f"""LOAN APPLICATION
-Applicant: {profile.get('name','Unknown')} ({profile.get('industry','Unknown')}, {profile.get('legal_type','Unknown')})
-Jurisdiction: {profile.get('jurisdiction','Unknown')}
-Requested Amount: ${state.get('requested_amount_usd',0):,.0f}
-Loan Purpose: {state.get('loan_purpose','Unknown')}
+        prior_default = any(bool(l.get("default_occurred")) for l in loans)
+        active_high_flag = any(f.get("severity") == "HIGH" and f.get("is_active") for f in flags)
 
-HISTORICAL FINANCIAL PROFILE (3 years — from bank registry):
-{fins_table}
+        # Base deterministic confidence from data completeness.
+        confidence = 0.80
+        confidence -= 0.15 * len(missing)
+        if data_quality:
+            confidence -= 0.10
+        if active_high_flag:
+            confidence = min(confidence, 0.50)
+            policy_overrides.append("POLICY_COMPLIANCE_FLAG_CONFIDENCE_CAP")
 
-CURRENT YEAR FACTS (extracted from submitted documents):
-{json.dumps({k:str(v) for k,v in facts.items() if v is not None}, indent=2)}
+        # Simple risk tier heuristics.
+        risk_tier = "MEDIUM"
+        if prior_default:
+            risk_tier = "HIGH"
+            policy_overrides.append("POLICY_PRIOR_DEFAULT_FORCE_HIGH")
+        else:
+            # Profitability / leverage heuristics.
+            if revenue and net_income is not None:
+                margin = net_income / revenue if revenue else 0.0
+                if margin < 0:
+                    risk_tier = "HIGH"
+                    key_concerns.append(f"Negative net income margin ({margin:.1%}).")
+                elif margin < 0.03:
+                    risk_tier = "MEDIUM"
+                    key_concerns.append(f"Thin net margin ({margin:.1%}).")
+                else:
+                    risk_tier = "LOW"
+            if assets and liabilities:
+                leverage = liabilities / assets if assets else 0.0
+                if leverage > 0.85:
+                    risk_tier = "HIGH"
+                    key_concerns.append(f"High leverage (liabilities/assets {leverage:.0%}).")
 
-DOCUMENT QUALITY FLAGS:
-{json.dumps(q_flags) if q_flags else 'None'}
+        # Recommended limit: start from requested, cap by revenue rule if available.
+        recommended_limit = int(max(0.0, requested))
+        if revenue and revenue > 0:
+            cap = int(revenue * 0.35)
+            if recommended_limit > cap:
+                recommended_limit = cap
+                policy_overrides.append("POLICY_REV_CAP_35PCT")
+        else:
+            # Without revenue, be conservative.
+            recommended_limit = int(requested * 0.50)
+            key_concerns.append("Revenue unavailable; conservative limit applied.")
 
-COMPLIANCE FLAGS:
-{json.dumps(flags) if flags else 'None'}
+        # Debt service coverage proxy (quick, deterministic; no amortization modeling).
+        if ebitda is not None and recommended_limit > 0:
+            # crude annual payment proxy: 20% of principal (keeps this deterministic + fast)
+            annual_payment_proxy = 0.20 * recommended_limit
+            dsc = (ebitda / annual_payment_proxy) if annual_payment_proxy else 0.0
+            if dsc < 1.25:
+                key_concerns.append(f"Weak DSCR proxy ({dsc:.2f}x < 1.25x).")
+                confidence -= 0.10
 
-PRIOR LOAN HISTORY:
-{json.dumps(loans) if loans else 'No prior loan history on record'}
+        confidence = max(0.0, min(1.0, confidence))
 
-Provide your analysis as JSON."""
+        # Do not model full intake as credit exposure when statements are incomplete or flagged;
+        # otherwise revenue-based caps can still equal intake and look "uncalculated".
+        if requested > 0 and (data_quality or missing):
+            max_with_partial_data = int(max(0.0, requested * 0.50))
+            if recommended_limit > max_with_partial_data:
+                recommended_limit = max_with_partial_data
+                policy_overrides.append("POLICY_DATA_UNCERTAINTY_MAX_50PCT_INTAKE")
 
-        decision: dict
-        ti = to = 0
-        cost = 0.0
-        try:
-            content, ti, to, cost = await self._call_llm(SYSTEM, USER, max_tokens=1024)
-            decision = self._parse_json(content)
-        except Exception as exc:
-            # Safe fallback — confidence < 0.60 forces REFER downstream
-            decision = {
-                "risk_tier": "MEDIUM",
-                "recommended_limit_usd": int((state.get("requested_amount_usd") or 0) * 0.75),
-                "confidence": 0.45,
-                "rationale": f"Automated analysis failed ({exc!s:.80}). Human review required.",
-                "key_concerns": ["Automated analysis error — human review required"],
-                "data_quality_caveats": [],
-                "policy_overrides_applied": ["ANALYSIS_FALLBACK"],
-            }
+        rationale_bits = []
+        if revenue:
+            rationale_bits.append(f"Revenue basis available (total_revenue≈${revenue:,.0f}).")
+        if risk_tier == "LOW":
+            rationale_bits.append("Signals indicate lower risk on profitability/leverage heuristics.")
+        elif risk_tier == "HIGH":
+            rationale_bits.append("Signals indicate higher risk; recommend tighter exposure and review.")
+        else:
+            rationale_bits.append("Risk is moderate given available signals.")
+        if policy_overrides:
+            rationale_bits.append("Hard policy constraints were applied.")
+        if data_quality:
+            rationale_bits.append("Data quality caveats reduce confidence.")
+
+        decision = {
+            "risk_tier": risk_tier,
+            "recommended_limit_usd": int(recommended_limit),
+            "confidence": float(confidence),
+            "rationale": " ".join(rationale_bits)[:600],
+            "key_concerns": key_concerns[:8],
+            "data_quality_caveats": data_quality[:8],
+            "policy_overrides_applied": policy_overrides[:8],
+        }
 
         ms = int((time.time() - t) * 1000)
         await self._record_node_execution(
             "analyze_credit_risk",
             ["historical_financials", "extracted_facts", "company_profile", "loan_request"],
             ["credit_decision"],
-            ms, ti, to, cost,
+            ms,
         )
         return {**state, "credit_decision": decision}
 
@@ -475,21 +547,28 @@ Provide your analysis as JSON."""
         positions = await self._append_with_retry(
             f"credit-{app_id}", [credit_event],
             causation_id=self.session_id,
+            correlation_id=app_id,
         )
 
-        # Trigger next agent: append FraudScreeningRequested to loan stream
         fraud_trigger = FraudScreeningRequested(
             application_id=app_id,
             requested_at=datetime.now(),
             triggered_by_event_id=self.session_id,
         ).to_store_dict()
-        await self._append_with_retry(f"loan-{app_id}", [fraud_trigger])
+        loan_positions = await self._append_with_retry(
+            f"loan-{app_id}",
+            [credit_event, fraud_trigger],
+            causation_id=self.session_id,
+            correlation_id=app_id,
+        )
 
         events_written = [
             {"stream_id": f"credit-{app_id}", "event_type": "CreditAnalysisCompleted",
              "stream_position": positions[0] if positions else -1},
+            {"stream_id": f"loan-{app_id}", "event_type": "CreditAnalysisCompleted",
+             "stream_position": loan_positions[0] if loan_positions else -1},
             {"stream_id": f"loan-{app_id}", "event_type": "FraudScreeningRequested",
-             "stream_position": -1},
+             "stream_position": loan_positions[1] if len(loan_positions) > 1 else -1},
         ]
         await self._record_output_written(
             events_written,

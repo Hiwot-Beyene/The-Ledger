@@ -1,5 +1,5 @@
 """
-ledger/registry/client.py — Applicant Registry read-only client
+src/registry/client.py — Applicant Registry read-only client
 ===============================================================
 COMPLETION STATUS: STUB — implement the query methods.
 

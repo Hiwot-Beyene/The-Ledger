@@ -1,18 +1,19 @@
 """
-ledger/agents/base_agent.py
+src/agents/base_agent.py
 ===========================
 BASE LANGGRAPH AGENT + all 5 agent class stubs.
 CreditAnalysisAgent is the reference implementation with full LangGraph pattern.
 The other 4 agents are stubs with complete docstrings for implementation.
 """
 from __future__ import annotations
-import asyncio, hashlib, json, re, time
+import asyncio, hashlib, json, logging, os, re, time
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Any
 from uuid import uuid4
-from anthropic import AsyncAnthropic
 from langgraph.graph import StateGraph, END
+
+logger = logging.getLogger("uvicorn.error")
 
 LANGGRAPH_VERSION = "1.0.0"
 MAX_OCC_RETRIES = 5
@@ -29,9 +30,18 @@ class BaseApexAgent(ABC):
     Each tool/registry call must call self._record_tool_call().
     The write_output node must call self._record_output_written() then self._record_node_execution().
     """
-    def __init__(self, agent_id: str, agent_type: str, store, registry, client: AsyncAnthropic, model="claude-sonnet-4-20250514"):
+    def __init__(
+        self,
+        agent_id: str,
+        agent_type: str,
+        store,
+        registry,
+        client: Any,
+        model: str | None = None,
+    ):
         self.agent_id = agent_id; self.agent_type = agent_type
-        self.store = store; self.registry = registry; self.client = client; self.model = model
+        self.store = store; self.registry = registry; self.client = client
+        self.model = model or self._default_model_for_provider()
         self.session_id = None; self.application_id = None
         self._session_stream = None; self._t0 = None
         self._seq = 0; self._llm_calls = 0; self._tokens = 0; self._cost = 0.0
@@ -46,6 +56,19 @@ class BaseApexAgent(ABC):
         self.session_id = f"sess-{self.agent_type[:3]}-{uuid4().hex[:8]}"
         self._session_stream = f"agent-{self.agent_type}-{self.session_id}"
         self._t0 = time.time(); self._seq = 0; self._llm_calls = 0; self._tokens = 0; self._cost = 0.0
+        verbose = (
+            os.getenv("LEDGER_AGENT_VERBOSE", "").strip().lower() in ("1", "true", "yes", "y")
+            or os.getenv("LOG_LEVEL", "").strip().upper() == "DEBUG"
+        )
+        if verbose:
+            msg = (
+                "START agent_type=%s agent_id=%s application_id=%s session_id=%s",
+                self.agent_type,
+                self.agent_id,
+                self.application_id,
+                self.session_id,
+            )
+            print(f"[agent] START agent_type={self.agent_type} agent_id={self.agent_id} application_id={self.application_id} session_id={self.session_id}", flush=True)
         await self._start_session(application_id)
         try:
             result = await self._graph.ainvoke(self._initial_state(application_id))
@@ -67,6 +90,12 @@ class BaseApexAgent(ABC):
         self._seq += 1
         if tok_in: self._tokens += tok_in + (tok_out or 0); self._llm_calls += 1
         if cost: self._cost += cost
+        verbose = (
+            os.getenv("LEDGER_AGENT_VERBOSE", "").strip().lower() in ("1", "true", "yes", "y")
+            or os.getenv("LOG_LEVEL", "").strip().upper() == "DEBUG"
+        )
+        if verbose:
+            print(f"[agent] NODE agent_type={self.agent_type} session_id={self.session_id} node={name} seq={self._seq} duration_ms={ms}", flush=True)
         await self._append_session({"event_type":"AgentNodeExecuted","event_version":1,"payload":{
             "session_id":self.session_id,"agent_type":self.agent_type,"node_name":name,
             "node_sequence":self._seq,"input_keys":in_keys,"output_keys":out_keys,
@@ -101,6 +130,12 @@ class BaseApexAgent(ABC):
     async def _append_session(self, event: dict):
         if not self._session_stream:
             raise RuntimeError("Session stream is not initialised")
+        verbose = (
+            os.getenv("LEDGER_AGENT_VERBOSE", "").strip().lower() in ("1", "true", "yes", "y")
+            or os.getenv("LOG_LEVEL", "").strip().upper() == "DEBUG"
+        )
+        if verbose:
+            print(f"[agent] SESSION_EVENT agent_type={self.agent_type} session_id={self.session_id} event_type={event.get('event_type')}", flush=True)
         await self._append_with_retry(
             stream_id=self._session_stream,
             events=[event],
@@ -149,10 +184,162 @@ class BaseApexAgent(ABC):
                 raise
 
     async def _call_llm(self, system, user, max_tokens=1024):
-        resp = await self.client.messages.create(model=self.model, max_tokens=max_tokens,
-            system=system, messages=[{"role":"user","content":user}])
-        t = resp.content[0].text; i = resp.usage.input_tokens; o = resp.usage.output_tokens
-        return t, i, o, round(i/1e6*3.0 + o/1e6*15.0, 6)
+        """
+        Unified LLM call used by all agents.
+
+        Returns:
+            (text, input_tokens, output_tokens, cost_usd_or_None)
+        """
+        deterministic_only = os.getenv("LEDGER_DETERMINISTIC_ONLY", "").strip().lower() in ("1", "true", "yes", "y")
+        if deterministic_only:
+            orch_llm_allowed = (
+                self.agent_type == "decision_orchestrator"
+                and os.getenv("WORKFLOW_ORCH_LLM_ENABLED", "1").strip().lower() in ("1", "true", "yes", "y")
+                and bool(os.getenv("OPENROUTER_API_KEY", "").strip())
+                and "YOUR_KEY_HERE" not in os.getenv("OPENROUTER_API_KEY", "")
+            )
+            if not orch_llm_allowed:
+                raise RuntimeError("LLM disabled (LEDGER_DETERMINISTIC_ONLY=true)")
+
+        openrouter_api_key = os.getenv("OPENROUTER_API_KEY", "").strip()
+        if not openrouter_api_key or "YOUR_KEY_HERE" in openrouter_api_key:
+            raise RuntimeError("OPENROUTER_API_KEY missing (OpenRouter-only mode)")
+
+        # OpenRouter provides an OpenAI-compatible interface, so we use one code path.
+        return await self._call_openai_compatible_rest(
+            system=system,
+            user=user,
+            max_tokens=max_tokens,
+        )
+
+    async def _call_openai_compatible_rest(
+        self, *, system: str, user: str, max_tokens: int
+    ) -> tuple[str, Any, Any, float | None]:
+        """
+        OpenAI-compatible chat completion call.
+
+        This is used when `GEMINI_API_KEY` is an OpenAI-compatible gateway key
+        (e.g. OpenRouter or internal proxy) that routes to Gemini models.
+        """
+        api_key = os.getenv("OPENROUTER_API_KEY", "").strip()
+        if not api_key or "YOUR_KEY_HERE" in api_key:
+            raise RuntimeError("OPENROUTER_API_KEY missing")
+
+        # Let the user override the gateway; default to OpenRouter.
+        base_url = (
+            os.getenv("OPENROUTER_BASE_URL", "").strip() or "https://openrouter.ai/api"
+        )
+        base_url = base_url.rstrip("/")
+        # Support either style of base_url:
+        # - ".../api" => ".../api/v1/chat/completions"
+        # - ".../api/v1" => ".../api/v1/chat/completions"
+        if base_url.endswith("/v1"):
+            url = base_url + "/chat/completions"
+        else:
+            url = base_url + "/v1/chat/completions"
+
+        explicit_model_override = os.getenv("OPENROUTER_MODEL", "").strip()
+        default_model = self.model
+        # OpenRouter model ids are typically vendor-prefixed, e.g. google/gemini-2.5-flash.
+        candidate_models = [explicit_model_override] if explicit_model_override else [default_model]
+        if candidate_models[0] and "/" not in candidate_models[0]:
+            candidate_models.append(f"google/{candidate_models[0]}")
+
+        def _post(model_name: str) -> dict[str, Any]:
+            import urllib.request
+            import urllib.error
+
+            payload = {
+                "model": model_name,
+                "temperature": 0,
+                "max_tokens": max_tokens,
+                "messages": [
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+            }
+            data = json.dumps(payload).encode("utf-8")
+            req_headers = {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": f"Bearer {api_key}",
+            }
+            referer = (os.getenv("OPENROUTER_REFERER") or os.getenv("HTTP_REFERER") or "").strip()
+            if referer:
+                req_headers["HTTP-Referer"] = referer
+            app_title = os.getenv("OPENROUTER_APP_TITLE", "").strip()
+            if app_title:
+                req_headers["X-Title"] = app_title
+            req = urllib.request.Request(
+                url,
+                data=data,
+                headers=req_headers,
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    raw = resp.read().decode("utf-8", errors="replace")
+                return json.loads(raw) if raw else {}
+            except urllib.error.HTTPError as e:
+                raw = e.read().decode("utf-8", errors="replace") if hasattr(e, "read") else ""
+                # Do not include the API key in the exception text.
+                raise RuntimeError(f"OpenAI-compatible HTTPError {e.code}: {raw[:2000]}") from e
+
+        last_error: Exception | None = None
+        for model_name in candidate_models:
+            try:
+                resp = await asyncio.to_thread(_post, model_name)
+
+                choices = resp.get("choices") or []
+                if choices:
+                    msg = choices[0].get("message") or {}
+                    text = msg.get("content") or choices[0].get("text") or ""
+                else:
+                    text = resp.get("text") or ""
+
+                usage = resp.get("usage") or {}
+                i = usage.get("prompt_tokens") or usage.get("promptTokenCount") or usage.get("prompt_token_count")
+                o = usage.get("completion_tokens") or usage.get("completionTokenCount") or usage.get("completion_token_count")
+                return text, i, o, self._estimate_llm_cost_usd(i, o)
+            except Exception as e:
+                last_error = e
+                # If the gateway rejects the model ID, try next candidate.
+                msg = str(e).lower()
+                if (
+                    ("model" in msg and ("invalid" in msg or "not a valid" in msg))
+                    or ("model id" in msg and "invalid" in msg)
+                ):
+                    continue
+                raise
+
+        # If all candidate model IDs fail, raise the last error.
+        raise last_error if last_error else RuntimeError("OpenAI-compatible LLM call failed")
+
+    def _default_model_for_provider(self) -> str:
+        # Model selection must be independent of API key presence so that fully
+        # deterministic runs (no LLM calls) can still instantiate agents.
+        return os.getenv("OPENROUTER_MODEL", "").strip() or "google/gemini-2.5-flash"
+
+    def _estimate_llm_cost_usd(self, input_tokens: Any, output_tokens: Any) -> float | None:
+        try:
+            i = float(input_tokens) if input_tokens is not None else None
+            o = float(output_tokens) if output_tokens is not None else None
+        except Exception:
+            return None
+
+        in_rate = os.getenv("LLM_INPUT_COST_USD_PER_1M_TOKENS", "").strip()
+        out_rate = os.getenv("LLM_OUTPUT_COST_USD_PER_1M_TOKENS", "").strip()
+        if not in_rate or not out_rate:
+            # Avoid inventing cost figures without configured rates.
+            return None
+        try:
+            in_cost = float(in_rate)
+            out_cost = float(out_rate)
+        except ValueError:
+            return None
+        if i is None or o is None:
+            return None
+        return round((i / 1e6) * in_cost + (o / 1e6) * out_cost, 6)
 
     async def _record_input_validated(self, inputs_validated: list[str], ms: int) -> None:
         await self._append_session(
@@ -527,8 +714,11 @@ class DecisionOrchestratorAgent(BaseApexAgent):
 
     OUTPUT STREAMS:
         loan-{id}: DecisionGenerated
-        loan-{id}: ApplicationApproved (if APPROVE) OR ApplicationDeclined (if DECLINE)
-                   OR HumanReviewRequested (if REFER)
+        loan-{id}: HumanReviewRequested
+
+        Binding ApplicationApproved/ApplicationDeclined events are produced only
+        after explicit human action (via MCP `record_human_review`), not
+        automatically inside the orchestrator.
     """
     def build_graph(self):
         from typing import TypedDict
@@ -552,11 +742,15 @@ class DecisionOrchestratorAgent(BaseApexAgent):
     async def _node_load_all_analyses(self, state): raise NotImplementedError("load credit, fraud, compliance streams; extract latest completed events")
     async def _node_synthesize_decision(self, state): raise NotImplementedError("LLM: synthesize all 3 inputs into recommendation + executive_summary")
     async def _node_apply_hard_constraints(self, state): raise NotImplementedError("Python rules: compliance BLOCKED→DECLINE, confidence<0.6→REFER, fraud>0.6→REFER")
-    async def _node_write_output(self, state): raise NotImplementedError("append DecisionGenerated + ApplicationApproved/Declined/HumanReviewRequested")
+    async def _node_write_output(self, state): raise NotImplementedError("append DecisionGenerated + HumanReviewRequested")
 
 
-from ledger.agents.document_processing_agent import DocumentProcessingAgent as _ProductionDocumentProcessingAgent
+try:
+    from agents.document_processing_agent import DocumentProcessingAgent as _ProductionDocumentProcessingAgent
+except Exception:
+    _ProductionDocumentProcessingAgent = None
 
 
-class DocumentProcessingAgent(_ProductionDocumentProcessingAgent):
-    """Backwards-compatible export that points to production implementation."""
+if _ProductionDocumentProcessingAgent is not None:
+    class DocumentProcessingAgent(_ProductionDocumentProcessingAgent):
+        """Backwards-compatible export that points to production implementation."""

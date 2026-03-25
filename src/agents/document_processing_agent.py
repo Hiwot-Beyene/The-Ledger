@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import asyncio
 import csv
+import json
 import os
 import time
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
@@ -12,8 +15,8 @@ from typing import Any, TypedDict
 from langgraph.graph import END, StateGraph
 from openpyxl import load_workbook
 
-from ledger.agents.base_agent import BaseApexAgent
-from ledger.schema.events import (
+from agents.base_agent import BaseApexAgent
+from models.events import (
     CreditAnalysisRequested,
     DocumentAdded,
     DocumentFormat,
@@ -32,6 +35,21 @@ from ledger.schema.events import (
 MAX_OCC_RETRIES = 5
 PIPELINE_VERSION = "week3-compatible-1.0"
 EXTRACTION_MODEL = "deterministic-parser-v1"
+QUALITY_SYSTEM_PROMPT = """
+You are a financial document quality analyst. You receive structured data
+extracted from a company's financial statements.
+
+Check ONLY:
+1. Internal consistency (Gross Profit = Revenue - COGS, Assets = Liabilities + Equity)
+2. Implausible values (margins > 80%, negative equity without note)
+3. Critical missing fields (total_revenue, net_income, total_assets, total_liabilities)
+
+Return JSON: {"overall_confidence": float, "is_coherent": bool,
+  "anomalies": [str], "critical_missing_fields": [str],
+  "reextraction_recommended": bool, "auditor_notes": str}
+
+DO NOT make credit or lending decisions. DO NOT suggest loan outcomes.
+""".strip()
 
 NUMERIC_FIELD_ALIASES: dict[str, tuple[str, ...]] = {
     "total_revenue": ("total_revenue", "revenue", "sales"),
@@ -41,6 +59,7 @@ NUMERIC_FIELD_ALIASES: dict[str, tuple[str, ...]] = {
     "total_equity": ("total_equity", "equity"),
     "net_income": ("net_income", "net_profit"),
 }
+CRITICAL_FIELDS = ("total_revenue", "net_income", "total_assets", "total_liabilities")
 
 
 @dataclass(slots=True)
@@ -67,19 +86,26 @@ class DocumentProcessingState(TypedDict):
 
 
 class DocumentProcessingAgent(BaseApexAgent):
+    def __init__(self, *args: Any, **kwargs: Any):
+        super().__init__(*args, **kwargs)
+        self._refinery_failures = 0
+        self._refinery_circuit_open_until = 0.0
+
     def build_graph(self):
         g = StateGraph(DocumentProcessingState)
         g.add_node("validate_inputs", self._node_validate_inputs)
         g.add_node("open_aggregate_record", self._node_open_aggregate_record)
         g.add_node("load_external_data", self._node_load_external_data)
-        g.add_node("process_documents", self._node_process_documents)
+        g.add_node("validate_document_formats", self._node_validate_document_formats)
+        g.add_node("extract_documents", self._node_extract_documents)
         g.add_node("assess_quality", self._node_assess_quality)
         g.add_node("write_output", self._node_write_output)
         g.set_entry_point("validate_inputs")
         g.add_edge("validate_inputs", "open_aggregate_record")
         g.add_edge("open_aggregate_record", "load_external_data")
-        g.add_edge("load_external_data", "process_documents")
-        g.add_edge("process_documents", "assess_quality")
+        g.add_edge("load_external_data", "validate_document_formats")
+        g.add_edge("validate_document_formats", "extract_documents")
+        g.add_edge("extract_documents", "assess_quality")
         g.add_edge("assess_quality", "write_output")
         g.add_edge("write_output", END)
         return g.compile()
@@ -268,17 +294,16 @@ class DocumentProcessingAgent(BaseApexAgent):
             int((time.time() - t0) * 1000),
         )
 
-        prior_upload_requested = False
-        all_events = []
-        async for evt in self.store.load_all(event_types=["DocumentUploadRequested"]):
-            all_events.append(evt)
-            if evt["payload"].get("application_id") == app_id:
-                prior_upload_requested = True
-                break
+        # Avoid global event-store scans (can grow large and slow).
+        loan_stream = f"loan-{app_id}"
+        loan_events = await self.store.load_stream(loan_stream)
+        prior_upload_requested = any(
+            (e.get("event_type") == "DocumentUploadRequested") for e in loan_events
+        )
         await self._record_tool_call(
-            "event_store.load_all",
-            "event_type=DocumentUploadRequested",
-            f"matched={prior_upload_requested}",
+            "event_store.load_stream",
+            f"stream_id={loan_stream}",
+            f"DocumentUploadRequested_found={prior_upload_requested}",
             int((time.time() - t0) * 1000),
         )
 
@@ -331,13 +356,13 @@ class DocumentProcessingAgent(BaseApexAgent):
         )
         return {**state, "processable_documents": state["all_documents"], "errors": errors}
 
-    async def _node_process_documents(self, state: DocumentProcessingState) -> DocumentProcessingState:
+    async def _node_validate_document_formats(self, state: DocumentProcessingState) -> DocumentProcessingState:
         t0 = time.time()
         app_id = state["application_id"]
         pkg_stream = f"docpkg-{app_id}"
-        docs = state["processable_documents"]
-        extracted: dict[str, dict[str, Any]] = {}
+        docs = state["all_documents"]
         errors = list(state["errors"])
+        processable: list[UploadedDocument] = []
 
         for doc in docs:
             val_start = time.time()
@@ -368,84 +393,126 @@ class DocumentProcessingAgent(BaseApexAgent):
                 errors.append(err)
                 await self._append_domain_error(
                     pkg_stream,
-                    node_name="process_documents",
+                    node_name="validate_document_formats",
                     document_id=doc.document_id,
                     code="invalid_document_format",
                     message=reason,
                     details={"file_path": doc.file_path},
                 )
                 continue
-
-            started = ExtractionStarted(
-                package_id=state["package_id"],
-                document_id=doc.document_id,
-                document_type=doc.document_type,
-                pipeline_version=PIPELINE_VERSION,
-                extraction_model=EXTRACTION_MODEL,
-                started_at=datetime.now(),
-            ).to_store_dict()
-            await self._append_events_with_retry(
-                pkg_stream,
-                [started],
-                causation_id=self.session_id,
-                correlation_id=app_id,
-                metadata={"file_path": doc.file_path},
-            )
-
-            extract_start = time.time()
-            try:
-                facts = await self._extract_facts(doc)
-            except Exception as exc:
-                errors.append(f"{doc.document_id}: extraction failed: {exc}")
-                await self._append_domain_error(
-                    pkg_stream,
-                    node_name="process_documents",
-                    document_id=doc.document_id,
-                    code="extraction_failure",
-                    message=str(exc),
-                    details={"file_path": doc.file_path},
-                )
-                facts = FinancialFacts(
-                    extraction_notes=[
-                        "extraction_failed",
-                        f"source_file={doc.file_path}",
-                    ],
-                    field_confidence={k: 0.0 for k in NUMERIC_FIELD_ALIASES.keys()},
-                )
-
-            completed = ExtractionCompleted(
-                package_id=state["package_id"],
-                document_id=doc.document_id,
-                document_type=doc.document_type,
-                facts=facts,
-                raw_text_length=0,
-                tables_extracted=1,
-                processing_ms=int((time.time() - extract_start) * 1000),
-                completed_at=datetime.now(),
-            ).to_store_dict()
-            await self._append_events_with_retry(
-                pkg_stream,
-                [completed],
-                causation_id=self.session_id,
-                correlation_id=app_id,
-                metadata={"file_path": doc.file_path},
-            )
-            await self._record_tool_call(
-                "document_extraction",
-                f"doc_id={doc.document_id} format={doc.document_format.value}",
-                "ExtractionCompleted",
-                int((time.time() - extract_start) * 1000),
-            )
-            extracted[doc.document_id] = completed["payload"]["facts"] or {}
+            processable.append(doc)
 
         ms = int((time.time() - t0) * 1000)
         await self._record_node_execution(
-            "process_documents",
+            "validate_document_formats",
+            ["all_documents"],
+            ["processable_documents", "errors"],
+            ms,
+        )
+        return {**state, "processable_documents": processable, "errors": errors}
+
+    async def _node_extract_documents(self, state: DocumentProcessingState) -> DocumentProcessingState:
+        t0 = time.time()
+        app_id = state["application_id"]
+        pkg_stream = f"docpkg-{app_id}"
+        extracted = dict(state["extracted_facts_by_doc"])
+        errors = list(state["errors"])
+
+        targets = [
+            d
+            for d in state["processable_documents"]
+            if d.document_type in (DocumentType.INCOME_STATEMENT, DocumentType.BALANCE_SHEET)
+        ]
+
+        async def _one(doc: UploadedDocument) -> tuple[str, dict[str, Any] | None, str | None]:
+            facts, err = await self._extract_and_append(doc, state["package_id"], pkg_stream, app_id)
+            return doc.document_id, (facts or None), err
+
+        if targets:
+            results = await asyncio.gather(*[_one(d) for d in targets], return_exceptions=True)
+            for r in results:
+                if isinstance(r, Exception):
+                    errors.append(f"extraction task failed: {r}")
+                    continue
+                doc_id, facts, err = r
+                if err:
+                    errors.append(err)
+                elif facts is not None:
+                    extracted[doc_id] = facts
+
+        ms = int((time.time() - t0) * 1000)
+        await self._record_node_execution(
+            "extract_documents",
             ["processable_documents"],
             ["extracted_facts_by_doc", "errors"],
             ms,
         )
         return {**state, "extracted_facts_by_doc": extracted, "errors": errors}
+
+    async def _extract_and_append(
+        self,
+        doc: UploadedDocument,
+        package_id: str,
+        pkg_stream: str,
+        app_id: str,
+    ) -> tuple[dict[str, Any], str | None]:
+        started = ExtractionStarted(
+            package_id=package_id,
+            document_id=doc.document_id,
+            document_type=doc.document_type,
+            pipeline_version=PIPELINE_VERSION,
+            extraction_model=EXTRACTION_MODEL,
+            started_at=datetime.now(),
+        ).to_store_dict()
+        await self._append_events_with_retry(
+            pkg_stream,
+            [started],
+            causation_id=self.session_id,
+            correlation_id=app_id,
+            metadata={"file_path": doc.file_path},
+        )
+        extract_start = time.time()
+        err: str | None = None
+        try:
+            facts = await self._extract_facts(doc)
+        except Exception as exc:
+            err = f"{doc.document_id}: extraction failed: {exc}"
+            await self._append_domain_error(
+                pkg_stream,
+                node_name=f"extract_{doc.document_type.value}",
+                document_id=doc.document_id,
+                code="extraction_failure",
+                message=str(exc),
+                details={"file_path": doc.file_path},
+            )
+            facts = FinancialFacts(
+                extraction_notes=["extraction_failed", f"source_file={doc.file_path}"],
+                field_confidence={k: 0.0 for k in NUMERIC_FIELD_ALIASES.keys()},
+            )
+        completed = ExtractionCompleted(
+            package_id=package_id,
+            document_id=doc.document_id,
+            document_type=doc.document_type,
+            facts=facts,
+            raw_text_length=0,
+            tables_extracted=1,
+            processing_ms=int((time.time() - extract_start) * 1000),
+            completed_at=datetime.now(),
+        ).to_store_dict()
+        await self._append_events_with_retry(
+            pkg_stream,
+            [completed],
+            causation_id=self.session_id,
+            correlation_id=app_id,
+            metadata={"file_path": doc.file_path},
+        )
+        await self._record_tool_call(
+            "document_extraction",
+            f"doc_id={doc.document_id} format={doc.document_format.value}",
+            "ExtractionCompleted",
+            int((time.time() - extract_start) * 1000),
+        )
+        return completed["payload"]["facts"] or {}, err
 
     async def _node_assess_quality(self, state: DocumentProcessingState) -> DocumentProcessingState:
         t0 = time.time()
@@ -453,7 +520,10 @@ class DocumentProcessingAgent(BaseApexAgent):
         pkg_stream = f"docpkg-{app_id}"
 
         merged = self._merge_facts(list(state["extracted_facts_by_doc"].values()))
+        # LLM is intentionally NOT used here. Document extraction quality should be
+        # deterministic; the LLM is reserved for the orchestrator recommendation.
         quality = self._deterministic_quality_assessment(merged)
+        tok_in = tok_out = cost = None
 
         quality_event = QualityAssessmentCompleted(
             package_id=state["package_id"],
@@ -472,23 +542,6 @@ class DocumentProcessingAgent(BaseApexAgent):
             causation_id=self.session_id,
             correlation_id=app_id,
         )
-
-        ms = int((time.time() - t0) * 1000)
-        await self._record_node_execution(
-            "assess_quality",
-            ["extracted_facts_by_doc"],
-            ["quality_assessment"],
-            ms,
-        )
-        return {**state, "quality_assessment": quality}
-
-    async def _node_write_output(self, state: DocumentProcessingState) -> DocumentProcessingState:
-        t0 = time.time()
-        app_id = state["application_id"]
-        pkg_stream = f"docpkg-{app_id}"
-        loan_stream = f"loan-{app_id}"
-        quality = state.get("quality_assessment") or {}
-
         ready_event = PackageReadyForAnalysis(
             package_id=state["package_id"],
             application_id=app_id,
@@ -504,6 +557,24 @@ class DocumentProcessingAgent(BaseApexAgent):
             correlation_id=app_id,
         )
 
+        ms = int((time.time() - t0) * 1000)
+        await self._record_node_execution(
+            "assess_quality",
+            ["extracted_facts_by_doc"],
+            ["quality_assessment"],
+            ms,
+            tok_in,
+            tok_out,
+            cost,
+        )
+        return {**state, "quality_assessment": quality}
+
+    async def _node_write_output(self, state: DocumentProcessingState) -> DocumentProcessingState:
+        t0 = time.time()
+        app_id = state["application_id"]
+        loan_stream = f"loan-{app_id}"
+        quality = state.get("quality_assessment") or {}
+
         trigger_event = CreditAnalysisRequested(
             application_id=app_id,
             requested_at=datetime.now(),
@@ -518,7 +589,6 @@ class DocumentProcessingAgent(BaseApexAgent):
         )
 
         events_written = [
-            {"stream_id": pkg_stream, "event_type": "PackageReadyForAnalysis"},
             {"stream_id": loan_stream, "event_type": "CreditAnalysisRequested"},
         ]
         await self._record_output_written(
@@ -545,20 +615,91 @@ class DocumentProcessingAgent(BaseApexAgent):
         raise ValueError(f"Unsupported format: {doc.document_format.value}")
 
     async def _extract_from_pdf(self, file_path: str, document_type: DocumentType) -> FinancialFacts:
+        api_base = os.getenv("DOC_REFINERY_API_URL", "http://localhost:8000").rstrip("/")
+        request_payload = {
+            "file_path": file_path,
+            "document_type": document_type.value,
+        }
+        api_url = f"{api_base}/v1/financial-facts/extract"
+
+        # Prefer local Week 3 service when available.
+        now = time.time()
+        if now >= self._refinery_circuit_open_until:
+            try:
+                raw_api = await asyncio.to_thread(self._post_json, api_url, request_payload)
+                raw_facts = raw_api.get("facts", raw_api)
+                if isinstance(raw_facts, dict):
+                    # Successful call closes the circuit.
+                    self._refinery_failures = 0
+                    self._refinery_circuit_open_until = 0.0
+                    return self._enforce_critical_quality_metadata(FinancialFacts(**raw_facts))
+            except Exception:
+                self._refinery_failures += 1
+                # Open circuit briefly to avoid repeated stalls within one workflow run.
+                if self._refinery_failures >= 1:
+                    cooldown_s = float(os.getenv("DOC_REFINERY_CIRCUIT_COOLDOWN_S", "30") or "30")
+                    self._refinery_circuit_open_until = time.time() + max(5.0, cooldown_s)
+
         try:
             from document_refinery.pipeline import extract_financial_facts  # type: ignore
 
             out = extract_financial_facts(file_path, document_type.value)
             raw = await out if asyncio.iscoroutine(out) else out
-            return FinancialFacts(**(raw or {}))
+            if isinstance(raw, dict) and "facts" in raw and isinstance(raw["facts"], dict):
+                return self._enforce_critical_quality_metadata(FinancialFacts(**raw["facts"]))
+            return self._enforce_critical_quality_metadata(FinancialFacts(**(raw or {})))
         except Exception:
-            return FinancialFacts(
+            return self._enforce_critical_quality_metadata(FinancialFacts(
                 extraction_notes=[
                     "week3_pipeline_unavailable_or_failed",
                     f"source_file={file_path}",
                 ],
                 field_confidence={k: 0.0 for k in NUMERIC_FIELD_ALIASES.keys()},
-            )
+            ))
+
+    async def _llm_quality_assessment(self, facts: dict[str, Any]) -> tuple[dict[str, Any], int | None, int | None, float | None]:
+        user_prompt = (
+            "Assess financial extraction coherence for this JSON payload.\n"
+            "Return only valid JSON with the required keys.\n\n"
+            f"facts={json.dumps(facts, default=str)}"
+        )
+        try:
+            content, ti, to, cost = await self._call_llm(QUALITY_SYSTEM_PROMPT, user_prompt, 512)
+            parsed = self._parse_json(content)
+            quality = self._normalize_quality(parsed, fallback=self._deterministic_quality_assessment(facts))
+            return quality, ti, to, cost
+        except Exception:
+            return self._deterministic_quality_assessment(facts), None, None, None
+
+    @staticmethod
+    def _normalize_quality(parsed: dict[str, Any], *, fallback: dict[str, Any]) -> dict[str, Any]:
+        out = dict(fallback)
+        out["overall_confidence"] = float(parsed.get("overall_confidence", fallback["overall_confidence"]))
+        out["is_coherent"] = bool(parsed.get("is_coherent", fallback["is_coherent"]))
+        out["anomalies"] = [str(x) for x in parsed.get("anomalies", fallback["anomalies"])]
+        out["critical_missing_fields"] = [str(x) for x in parsed.get("critical_missing_fields", fallback["critical_missing_fields"])]
+        out["reextraction_recommended"] = bool(
+            parsed.get("reextraction_recommended", fallback["reextraction_recommended"])
+        )
+        out["auditor_notes"] = str(parsed.get("auditor_notes", fallback["auditor_notes"]))
+        out["overall_confidence"] = max(0.0, min(1.0, out["overall_confidence"]))
+        return out
+
+    @staticmethod
+    def _post_json(url: str, payload: dict[str, Any], timeout: float = 10.0) -> dict[str, Any]:
+        body = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            url,
+            data=body,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = resp.read().decode("utf-8")
+        parsed = json.loads(data) if data else {}
+        if not isinstance(parsed, dict):
+            raise ValueError("Expected JSON object from refinery API")
+        return parsed
 
     def _extract_from_csv(self, file_path: str) -> FinancialFacts:
         values: dict[str, Decimal] = {}
@@ -573,11 +714,11 @@ class DocumentProcessingAgent(BaseApexAgent):
                     num = self._to_decimal(row[alias])
                     if num is not None:
                         values[target] = num
-        return FinancialFacts(
+        return self._enforce_critical_quality_metadata(FinancialFacts(
             **values,
             extraction_notes=[f"source_file={file_path}"],
             field_confidence={k: (1.0 if k in values else 0.0) for k in NUMERIC_FIELD_ALIASES.keys()},
-        )
+        ))
 
     def _extract_from_xlsx(self, file_path: str) -> FinancialFacts:
         wb = load_workbook(file_path, read_only=True, data_only=True)
@@ -594,11 +735,25 @@ class DocumentProcessingAgent(BaseApexAgent):
                     if key in aliases:
                         values[target] = value
         wb.close()
-        return FinancialFacts(
+        return self._enforce_critical_quality_metadata(FinancialFacts(
             **values,
             extraction_notes=[f"source_file={file_path}"],
             field_confidence={k: (1.0 if k in values else 0.0) for k in NUMERIC_FIELD_ALIASES.keys()},
-        )
+        ))
+
+    def _enforce_critical_quality_metadata(self, facts: FinancialFacts) -> FinancialFacts:
+        notes = list(facts.extraction_notes or [])
+        conf = dict(facts.field_confidence or {})
+        for field in CRITICAL_FIELDS:
+            value = getattr(facts, field, None)
+            if value is None:
+                conf[field] = 0.0
+                marker = f"critical_missing_field={field}"
+                if marker not in notes:
+                    notes.append(marker)
+        facts.field_confidence = conf
+        facts.extraction_notes = notes
+        return facts
 
     @staticmethod
     def _to_decimal(value: Any) -> Decimal | None:
