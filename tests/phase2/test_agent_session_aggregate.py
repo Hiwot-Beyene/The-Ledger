@@ -4,8 +4,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from ledger.domain.aggregates.agent_session import AgentSessionAggregate
-from ledger.schema.events import DomainError
+from aggregates.agent_session import AgentSessionAggregate
+from models.events import DomainError
 
 
 def _evt(event_type: str, stream_position: int, payload: dict | None = None) -> SimpleNamespace:

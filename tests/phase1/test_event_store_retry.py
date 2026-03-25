@@ -3,8 +3,8 @@ import asyncio
 import asyncpg.exceptions as apg_exc
 import pytest
 
-from ledger.event_store import EventStore, is_transient_db_error
-from ledger.schema.events import OptimisticConcurrencyError
+from event_store import EventStore, is_transient_db_error
+from models.events import OptimisticConcurrencyError
 
 
 def test_is_transient_deadlock_and_serialization():
@@ -95,7 +95,7 @@ async def test_load_all_rejects_non_positive_batch_size_without_connecting():
 
 
 def test_load_all_rejects_negative_batch_in_memory():
-    from ledger.event_store import InMemoryEventStore
+    from event_store import InMemoryEventStore
 
     async def drain() -> None:
         s = InMemoryEventStore()

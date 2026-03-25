@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-SCHEMA_PATH = REPO_ROOT / "ledger" / "schema.sql"
+SCHEMA_PATH = REPO_ROOT / "src" / "schema.sql"
 
 
 def get_postgres_test_url() -> str:
@@ -79,7 +79,20 @@ async def truncate_event_store_tables(pool) -> None:
     async with pool.acquire() as conn:
         await conn.execute(
             """
-            TRUNCATE TABLE outbox, events, event_streams, projection_checkpoints
+            TRUNCATE TABLE
+                compliance_audit_snapshots_bg,
+                compliance_audit_current_bg,
+                compliance_audit_snapshots,
+                compliance_audit_current,
+                application_decision_attribution,
+                agent_session_index,
+                agent_performance_ledger,
+                application_summary,
+                snapshots,
+                outbox,
+                events,
+                event_streams,
+                projection_checkpoints
             RESTART IDENTITY CASCADE
             """
         )

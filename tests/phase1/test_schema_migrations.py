@@ -1,11 +1,11 @@
-"""Static checks: migrations match Phase 1 rubric and stay aligned with ledger/schema.sql."""
+"""Static checks: migrations match Phase 1 rubric and stay aligned with src/schema.sql."""
 
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-UP = ROOT / "ledger/migrations/001_event_store.up.sql"
-DOWN = ROOT / "ledger/migrations/001_event_store.down.sql"
-SCHEMA = ROOT / "ledger/schema.sql"
+ROOT = Path(__file__).resolve().parent.parent.parent
+UP = ROOT / "src/migrations/001_event_store.up.sql"
+DOWN = ROOT / "src/migrations/001_event_store.down.sql"
+SCHEMA = ROOT / "src/schema.sql"
 
 
 def test_forward_migration_exists_and_defines_four_tables():
@@ -21,8 +21,12 @@ def test_forward_migration_exists_and_defines_four_tables():
         "idx_events_global_pos",
         "idx_events_type",
         "idx_events_recorded",
+        "idx_events_recorded_brin",
     ):
         assert f"CREATE INDEX IF NOT EXISTS {idx}" in text
+    assert "idx_outbox_unpublished_created" in text
+    assert "CREATE TABLE IF NOT EXISTS snapshots" in text
+    assert "idx_snapshots_stream_latest" in text
     assert "archived_at" in text
     assert "published_at" in text
     assert "attempts" in text
@@ -49,6 +53,10 @@ def test_schema_sql_parity_with_forward_migration():
         "CREATE INDEX IF NOT EXISTS idx_events_global_pos",
         "CREATE INDEX IF NOT EXISTS idx_events_type",
         "CREATE INDEX IF NOT EXISTS idx_events_recorded",
+        "CREATE INDEX IF NOT EXISTS idx_events_recorded_brin",
+        "CREATE INDEX IF NOT EXISTS idx_outbox_unpublished_created",
+        "CREATE TABLE IF NOT EXISTS snapshots",
+        "CREATE INDEX IF NOT EXISTS idx_snapshots_stream_latest",
     )
     for f in fragments:
         assert f in up, f"missing in 001_event_store.up.sql: {f!r}"

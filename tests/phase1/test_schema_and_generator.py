@@ -1,19 +1,17 @@
 """
-tests/test_schema_and_generator.py
-===================================
+tests/phase1/test_schema_and_generator.py
+=========================================
 Phase 0 tests: schema completeness + data generator correctness.
-Run BEFORE writing any EventStore code.
-These must all pass out of the box with the provided starter code.
 
-Run: pytest tests/test_schema_and_generator.py -v
+Run: pytest tests/phase1/test_schema_and_generator.py -v
 """
 import json, random, sys, os
 from pathlib import Path
 from decimal import Decimal
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-from ledger.schema.events import EVENT_REGISTRY, BaseEvent, FinancialFacts, CreditDecision
+from models.events import EVENT_REGISTRY, BaseEvent, FinancialFacts, CreditDecision
 from datagen.company_generator import generate_companies
 from datagen.event_simulator import EventSimulator
 from datagen.schema_validator import SchemaValidator

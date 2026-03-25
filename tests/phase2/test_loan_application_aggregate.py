@@ -4,13 +4,13 @@ from types import SimpleNamespace
 
 import pytest
 
-from ledger.domain.aggregates.loan_application import (
+from aggregates.loan_application import (
     ApplicationState,
     LoanApplicationAggregate,
     VALID_TRANSITIONS,
 )
-from ledger.domain.aggregates.compliance_record import ComplianceRecordAggregate
-from ledger.schema.events import DomainError
+from aggregates.compliance_record import ComplianceRecordAggregate
+from models.events import DomainError
 
 
 def _evt(event_type: str, stream_position: int, payload: dict | None = None) -> SimpleNamespace:
@@ -142,6 +142,27 @@ def test_assert_may_append_application_approved_merges_required():
 
     agg.assert_may_append_application_approved(comp, [])
     assert agg.required_compliance_checks == {"x"}
+
+
+def test_compliance_record_noted_rule_counts_for_binding():
+    comp = ComplianceRecordAggregate(application_id="app")
+    comp._apply(
+        {
+            "event_type": "ComplianceCheckInitiated",
+            "event_version": 1,
+            "payload": {"rules_to_evaluate": ["REG-006"]},
+        }
+    )
+    comp._apply(
+        {
+            "event_type": "ComplianceRuleNoted",
+            "event_version": 1,
+            "payload": {"rule_id": "REG-006"},
+        }
+    )
+    agg = LoanApplicationAggregate(application_id="app")
+    agg.required_compliance_checks = {"REG-006"}
+    agg.assert_may_append_application_approved(comp, [])
 
 
 def test_decision_generated_low_confidence_emits_refer_transition_stays_pending():

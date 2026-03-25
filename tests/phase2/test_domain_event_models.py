@@ -6,7 +6,7 @@ from decimal import Decimal
 import pytest
 from pydantic import ValidationError
 
-from ledger.schema.events import (
+from models.events import (
     CreditAnalysisCompleted,
     DecisionGenerated,
     DecisionRecommendation,
@@ -109,7 +109,7 @@ def test_optimistic_concurrency_to_diagnostic_dict():
 
 
 def test_application_submitted_rejects_non_positive_amount():
-    from ledger.schema.events import ApplicationSubmitted
+    from models.events import ApplicationSubmitted
 
     t = datetime.now(UTC)
     with pytest.raises(ValidationError):

@@ -1,13 +1,15 @@
 """
-tests/test_narratives.py
-========================
+tests/phase2/test_narratives.py
+===============================
 The 5 narrative scenario tests. These are the primary correctness gate.
 These FAIL until all 5 agents and aggregates are implemented.
 
-Run: pytest tests/test_narratives.py -v -s
+Run: pytest tests/phase2/test_narratives.py -v -s
 """
 import pytest, sys
-from pathlib import Path; sys.path.insert(0, str(Path(__file__).parent.parent))
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 # Narrative scenarios tested here match Section 7 of the challenge document.
 # Each test drives a complete application through the real agent pipeline.

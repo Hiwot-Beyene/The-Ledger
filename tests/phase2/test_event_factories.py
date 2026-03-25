@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from ledger.schema.event_factories import (
+from models.event_factories import (
     store_dict_application_submitted,
     store_dict_compliance_check_requested,
     store_dict_credit_analysis_completed_for_loan_stream,
@@ -8,7 +8,7 @@ from ledger.schema.event_factories import (
     store_dict_decision_generated_for_loan_stream,
     store_dict_decision_requested,
 )
-from ledger.schema.events import DecisionRecommendation, deserialize_event
+from models.events import DecisionRecommendation, deserialize_event
 
 
 def test_factories_roundtrip_through_deserialize_event():

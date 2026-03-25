@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from ledger.domain.commands.handlers import (
+from commands.handlers import (
     ApplicationApprovedCommand,
     CreditAnalysisCompletedCommand,
     DecisionGeneratedCommand,
@@ -14,7 +14,7 @@ from ledger.domain.commands.handlers import (
     handle_submit_application,
     hash_inputs,
 )
-from ledger.schema.events import DomainError
+from models.events import DomainError
 
 pytestmark = [pytest.mark.command_handler]
 
@@ -86,8 +86,11 @@ async def test_handle_submit_application_appends_with_replayed_version_and_trace
     assert call["expected_version"] == -1
     assert call["correlation_id"] == "corr-1"
     assert call["causation_id"] == "cause-1"
+    assert len(call["events"]) == 2
     assert call["events"][0]["event_type"] == "ApplicationSubmitted"
     assert call["events"][0]["payload"]["application_id"] == "A-1"
+    assert call["events"][1]["event_type"] == "DocumentUploadRequested"
+    assert call["events"][1]["payload"]["application_id"] == "A-1"
     assert store.load_stream_ids == ["loan-A-1"]
 
 
@@ -321,6 +324,31 @@ async def test_handle_decision_generated_invalid_stream_id_before_append():
         await handle_decision_generated(cmd, store)
 
     assert exc.value.code == "invalid_agent_stream_id"
+    assert store.append_calls == []
+
+
+@pytest.mark.asyncio
+async def test_handle_decision_generated_declared_model_version_mismatch_no_append():
+    app_id = "A-mv-decision"
+    streams = {
+        f"loan-{app_id}": [*_loan_pending_decision_tail(app_id)],
+        "agent-credit-smv2": [
+            _evt("AgentContextLoaded", 1, {"model_version": "session-v"}),
+            _evt("DecisionGenerated", 2, {"application_id": app_id}),
+        ],
+    }
+    store = SpyStore(streams=streams)
+    cmd = DecisionGeneratedCommand(
+        application_id=app_id,
+        recommendation="REFER",
+        confidence_score=0.9,
+        contributing_agent_sessions=["agent-credit-smv2"],
+        summary="s",
+        contributing_session_model_versions={"agent-credit-smv2": "other-v"},
+    )
+    with pytest.raises(DomainError) as exc:
+        await handle_decision_generated(cmd, store)
+    assert exc.value.code == "model_version_mismatch"
     assert store.append_calls == []
 
 

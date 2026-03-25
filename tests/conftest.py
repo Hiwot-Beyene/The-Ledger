@@ -21,5 +21,5 @@ def sample_companies():
 @pytest.fixture
 def event_store_class():
     """Returns the EventStore class. Swap for real once implemented."""
-    from ledger.event_store import EventStore
+    from event_store import EventStore
     return EventStore
