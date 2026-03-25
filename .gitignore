@@ -6,3 +6,4 @@ __pycache__/
 *.pyo
 *.pyd
 data/uploads/*
+document-intelligence-refinery/
