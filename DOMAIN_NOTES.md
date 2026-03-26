@@ -4,7 +4,7 @@
 
 ## Context
 
-In my assessment, this challenge is fundamentally about replacing ephemeral agent traces and mutable workflow state with a durable event-sourced ledger that can satisfy enterprise audit, temporal replay, concurrency control, and regulatory explainability requirements. The architecture in the provided materials is explicit about that shift. The write side is an append-only event store backed by PostgreSQL. The read side is a set of rebuildable projections maintained by an async daemon. The domain is partitioned into four aggregates, each of which represents a consistency boundary rather than a foldering convenience: `LoanApplication`, `AgentSession`, `ComplianceRecord`, and `AuditLedger`. Guards, invariants, and transition diagrams for the command-side aggregates live in `ledger/domain/aggregates/README.md`.
+In my assessment, this challenge is fundamentally about replacing ephemeral agent traces and mutable workflow state with a durable event-sourced ledger that can satisfy enterprise audit, temporal replay, concurrency control, and regulatory explainability requirements. The architecture in the provided materials is explicit about that shift. The write side is an append-only event store backed by PostgreSQL. The read side is a set of rebuildable projections maintained by an async daemon. The domain is partitioned into four aggregates, each of which represents a consistency boundary rather than a foldering convenience: `LoanApplication`, `AgentSession`, `ComplianceRecord`, and `AuditLedger`. Guards, invariants, and transition diagrams for the command-side aggregates live in `src/aggregates/README.md`.
 
 The importance of this framing is that the problem is not "how do I log more details?" The real problem is "how do I make the event history itself the source of truth so that any current or historical state can be reconstructed, justified, and defended?" That distinction shapes every answer below.
 
@@ -97,7 +97,7 @@ This is also why lag measurement is a non-negotiable metric in the challenge doc
 
 ## 5. Upcasting with Field-Level Inference Reasoning
 
-The rubric states the scenario in terms of a hypothetical `CreditDecisionMade` event that evolved between 2024 and 2026. I am addressing that scenario directly because it tests my understanding of upcasting mechanics and field-level inference. At the same time, I note that this specific codebase currently points to two concrete upcaster targets in `ledger/upcasters.py` and the challenge document: `CreditAnalysisCompleted v1 → v2` and `DecisionGenerated v1 → v2`. The same upcasting principles apply in both cases: upcasters run on read, preserve immutability of the stored event, and upgrade older payloads into the current schema expected by the domain layer.
+The rubric states the scenario in terms of a hypothetical `CreditDecisionMade` event that evolved between 2024 and 2026. I am addressing that scenario directly because it tests my understanding of upcasting mechanics and field-level inference. At the same time, I note that this specific codebase currently points to two concrete upcaster targets in `src/upcasting/registry.py` and `src/upcasting/upcasters.py` and the challenge document: `CreditAnalysisCompleted v1 → v2` and `DecisionGenerated v1 → v2`. The same upcasting principles apply in both cases: upcasters run on read, preserve immutability of the stored event, and upgrade older payloads into the current schema expected by the domain layer.
 
 The rubric scenario is that `CreditDecisionMade` was stored in 2024 with the payload:
 

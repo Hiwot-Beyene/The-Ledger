@@ -1,0 +1,14 @@
+{
+  "native_digital": {
+    "avg_char_count_per_page": "> 100",
+    "avg_image_area_ratio": "< 0.50"
+  },
+  "scanned_image": {
+    "char_count_per_page": "< 30",
+    "image_area_ratio": "> 0.50",
+    "scanned_pages_ratio": ">= 0.85"
+  },
+  "mixed": {
+    "description": "No origin type reaches 85% of pages"
+  }
+}

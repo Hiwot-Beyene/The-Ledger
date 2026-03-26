@@ -1,0 +1,21 @@
+{
+  "doc_id": "f19c466107a341f2",
+  "document_name": "a63c94a631c9_tax_expenditure_ethiopia_2021_22.pdf",
+  "origin_type": "native_digital",
+  "layout_complexity": "multi_column",
+  "language": {
+    "code": "en",
+    "confidence": 0.4
+  },
+  "domain_hint": "financial",
+  "estimated_extraction_cost": "needs_layout_model",
+  "triage_signals": {
+    "avg_char_density": 0.0034999725583255135,
+    "avg_whitespace_ratio": 0.8398787057297191,
+    "avg_image_area_ratio": 0.0007183224179620457,
+    "table_density": 0.000457336844820121,
+    "figure_density": 6.653623988071884e-08
+  },
+  "selected_strategy": "B",
+  "triage_confidence_score": 1.0
+}

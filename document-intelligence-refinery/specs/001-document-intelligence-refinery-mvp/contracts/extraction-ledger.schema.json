@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ExtractionLedgerEntry",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "doc_id",
+    "document_name",
+    "strategy_sequence",
+    "final_strategy",
+    "confidence_score",
+    "cost_estimate_usd",
+    "processing_time_ms",
+    "budget_cap_usd",
+    "budget_status"
+  ],
+  "properties": {
+    "timestamp": { "type": "string", "format": "date-time" },
+    "doc_id": { "type": "string" },
+    "document_name": { "type": "string" },
+    "strategy_sequence": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["A", "B", "C"] },
+      "minItems": 1
+    },
+    "final_strategy": { "type": "string", "enum": ["A", "B", "C"] },
+    "confidence_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "cost_estimate_usd": { "type": "number", "minimum": 0 },
+    "processing_time_ms": { "type": "integer", "minimum": 0 },
+    "budget_cap_usd": { "type": "number", "minimum": 0 },
+    "budget_status": { "type": "string", "enum": ["under_cap", "cap_reached"] },
+    "notes": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

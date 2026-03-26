@@ -1,0 +1,56 @@
+{
+  "doc_id": "ccb87d03bb66",
+  "root": {
+    "section_id": "root-ccb87d03bb66",
+    "title": "2013-E.C-Assigned-regular-budget-and-expense.pdf",
+    "page_start": 1,
+    "page_end": 3,
+    "summary": "የፕሮግራሙሃየተግባሩ ሰም\n\nገራም 1. ሥራ አመራርና\n\nተግባር 1 የውጭ ቀጥተኛ\nኢነቨስትመንትን መሳብ\n\nአባሪ 1.4 በ2013 በጀት ዓመት የተመደበ መደበኛ በጀት እና ወጪ መረጃ\n\nRY Alien Uo bi an PLO ዓመቱ/2013\n\nየተመደበ በጀት /በሺህ ብር/ ወጪሆነ /በሺህ ብር/ የተመደበ /በሺህ ብር/ እስከ 3ኛው",
+    "key_entities": [
+      "2013"
+    ],
+    "data_types_present": [
+      "narrative"
+    ],
+    "child_sections": [
+      {
+        "section_id": "sec-1",
+        "title": "Page 1",
+        "page_start": 1,
+        "page_end": 1,
+        "summary": "የፕሮግራሙሃየተግባሩ ሰም\n\nገራም 1. ሥራ አመራርና\n\nተግባር 1 የውጭ ቀጥተኛ\nኢነቨስትመንትን መሳብ\n\nአባሪ 1.4 በ2013 በጀት ዓመት የተመደበ መደበኛ በጀት እና ወጪ መረጃ\n\nRY Alien Uo bi an PLO ዓመቱ/2013\n\nየተመደበ በጀት /በሺህ ብር/ ወጪሆነ /በሺህ ብር/ የተመደበ /በሺህ ብር/ እስከ 3ኛው",
+        "key_entities": [
+          "2013"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-2",
+        "title": "Page 2",
+        "page_start": 2,
+        "page_end": 2,
+        "summary": "eae an\n\n'ግራም ስም\n\nውጤት:የተሰጡ የደጋፍ አገልግሎቶች\nየፕሮግራም ስም፦ ኢንቨስትመንትን መሳብና ማቆየት\n\n \n \n\nየተሳበ የውጭ ቀጥተኛ ኢንቨስትመንት\n\nየፕሮግራም ስም፥ የኢንቨስትመንት አገልግሎት፤\nድጋፍና ቁጥጥር\n\nውጤቶች\n\nየተሰጡ የኢንቨስትመንት አገልግሎቶች\n\nወደ ተግባር /አገልግሎት መስጠት የተሸጋሩ\nፕሮጀ",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-3",
+        "title": "Page 3",
+        "page_start": 3,
+        "page_end": 3,
+        "summary": "የፕሮግራም ስም\n\nየፕሮግራም ስም፦ የኢንቨስትመንት ፖሊሲ ጥናትና\nምርምር\nውጤት\n\nየተፈጠረ ምቹ የኢንቨስትመንት ከባቢ ሁኔታ\n\n     \n  \n\n  \n\nየተሻሻለ ምቹ ከባቢ ተቋማትን\nሁኔታ በደረጃ የማስተባበር ስራ\nበመከናወን ላይ\n\nየአፈጻጸም መረጃውን ያዘጋጀው ስም....-",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      }
+    ]
+  }
+}

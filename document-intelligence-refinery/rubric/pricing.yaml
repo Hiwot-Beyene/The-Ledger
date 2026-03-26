@@ -1,0 +1,29 @@
+# Per-model token pricing (USD per 1M tokens). Used for budget guard and ledger.
+# Keys: "provider/model_name" or "provider" for provider default. User overrides via runtime_model.
+defaults:
+  # Fallback when model not in table (USD per 1M tokens)
+  input_per_1m_usd: 1.0
+  output_per_1m_usd: 2.0
+
+# Ollama: virtual pricing (Ollama has no API pricing; we estimate cost as-if paid for budget guard)
+ollama:
+  input_per_1m_usd: 0.10
+  output_per_1m_usd: 0.30
+  # Per-model overrides (optional)
+  models:
+    "llava:7b": { input_per_1m_usd: 0.05, output_per_1m_usd: 0.15 }
+    "llava:13b": { input_per_1m_usd: 0.08, output_per_1m_usd: 0.25 }
+    "qwen3-vl:235b-instruct-cloud": { input_per_1m_usd: 0.50, output_per_1m_usd: 1.50 }
+
+openai:
+  input_per_1m_usd: 0.15
+  output_per_1m_usd: 0.60
+  models:
+    "gpt-4o": { input_per_1m_usd: 2.50, output_per_1m_usd: 10.00 }
+    "gpt-4o-mini": { input_per_1m_usd: 0.15, output_per_1m_usd: 0.60 }
+    "gpt-4-turbo": { input_per_1m_usd: 10.00, output_per_1m_usd: 30.00 }
+
+openrouter:
+  input_per_1m_usd: 0.50
+  output_per_1m_usd: 1.50
+  models: {}

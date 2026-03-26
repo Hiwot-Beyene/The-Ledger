@@ -1,0 +1,322 @@
+{
+  "doc_id": "f2f95274829d",
+  "root": {
+    "section_id": "root-f2f95274829d",
+    "title": "Security_Vulnerability_Disclosure_Standard_Procedure_1.pdf",
+    "page_start": 1,
+    "page_end": 15,
+    "summary": "PATEL TIS VIH\nCommercial Bank of Ethiopia\n\n   \n\nSecurity Vulnerability Disclosure Standard Procedure\nINFORMATION SYSTEMS DIVE 7\nI< %5\\\n+\né a} 3\n\n  \n \n\nFebruary 2023 This page is left intentionally Acr",
+    "key_entities": [
+      "February 2023",
+      "2023",
+      "Commercial Bank of Ethiopia",
+      "INFORMATION SYSTEMS DIVE",
+      "Information Systems Security",
+      "Information Systems",
+      "Information Network",
+      "systems",
+      "Network",
+      "Vulnerability Disclosure",
+      "Standard Procedure",
+      "STANDARD PROCEDURE 2023"
+    ],
+    "data_types_present": [
+      "narrative"
+    ],
+    "child_sections": [
+      {
+        "section_id": "sec-1",
+        "title": "Page 1",
+        "page_start": 1,
+        "page_end": 1,
+        "summary": "PATEL TIS VIH\nCommercial Bank of Ethiopia\n\n   \n\nSecurity Vulnerability Disclosure Standard Procedure\nINFORMATION SYSTEMS DIVE 7\nI< %5\\\n+\né a} 3\n\n  \n \n\nFebruary 2023",
+        "key_entities": [
+          "February 2023",
+          "2023",
+          "Commercial Bank of Ethiopia",
+          "INFORMATION SYSTEMS DIVE",
+          "Vulnerability Disclosure",
+          "Standard Procedure"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-2",
+        "title": "Page 2",
+        "page_start": 2,
+        "page_end": 2,
+        "summary": "This page is left intentionally",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-3",
+        "title": "Page 3",
+        "page_start": 3,
+        "page_end": 3,
+        "summary": "Acronyms\n\nTerms\nCBE\nIS\n\nISS\nINSA\nAPI\nSSL\nSQL\nDoS -\nDDoS\nHTTP\nUI/UX\nCSRF\nXSS\nHTML\nCLI\n\nDefinition\nCommercial Bank of Ethiopia\n\nInformation Systems Security\n\nInformation Systems\n\nInformation Network Sec",
+        "key_entities": [
+          "Commercial Bank of Ethiopia",
+          "Information Systems Security",
+          "Information Systems",
+          "Information Network Security",
+          "CBE",
+          "INSA",
+          "API",
+          "SSL"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-4",
+        "title": "Page 4",
+        "page_start": 4,
+        "page_end": 4,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\n1 INTRODUCTION\n\n1.1 Preamble\nWhereas, Cybercrime is increasing exponentially and becoming a global\nproblem due to organizations’ fast digital tran",
+        "key_entities": [
+          "2023",
+          "Commercial Bank of Ethiopia",
+          "systems",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "Standard Procedure",
+          "CBE"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-5",
+        "title": "Page 5",
+        "page_start": 5,
+        "page_end": 5,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\n1.2 Short Title\n\nThis document can be cited as “CBE Vulnerability Disclosure Standard\n\nProcedure”.\n\n1.3 Definition of Terms\n\na. Availability: Mean",
+        "key_entities": [
+          "2023",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "Standard Procedure",
+          "CBE",
+          "CLI",
+          "DoS",
+          "DDoS"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-6",
+        "title": "Page 6",
+        "page_start": 6,
+        "page_end": 6,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\nj. Security researcher: Means skilled experts that use their technical\nknowledge to identify vulnerabilities.\n\nk. Phishing: Refers to the type of",
+        "key_entities": [
+          "2023",
+          "Commercial Bank of Ethiopia",
+          "systems",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "CBE"
+        ],
+        "data_types_present": [
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-7",
+        "title": "Page 7",
+        "page_start": 7,
+        "page_end": 7,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\nv. Zero-day vulnerabilities: Means a vulnerability in a system or device that\n\nhas been disclosed but is not yet patched.\n\n1.4 The objective of th",
+        "key_entities": [
+          "2023",
+          "2011",
+          "Bank of Ethiopia",
+          "COMMERCIAL BANK OF ETHIOPIA",
+          "Information Systems Security",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "Standard Procedure"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-8",
+        "title": "Page 8",
+        "page_start": 8,
+        "page_end": 8,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE plik}\n\n2 SCOPE\n\n2.1. Scope of the standard procedure\nThis standard procedure applies to all ethical hackers and security researchers,\ninternal or extern",
+        "key_entities": [
+          "COMMERCIAL BANK OF ETHIOPIA",
+          "systems",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE",
+          "CBE"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-9",
+        "title": "Page 9",
+        "page_start": 9,
+        "page_end": 9,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\na)\n\nb)\n\nc)\n\ndq)\n\ne)\n\nAny services and systems hosted by 3° party providers and integrators are\nexcluded from the scope.\n\nNot original, previously",
+        "key_entities": [
+          "2023",
+          "COMMERCIAL BANK OF ETHIOPIA",
+          "systems",
+          "Section 5",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "CBE"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-10",
+        "title": "Page 10",
+        "page_start": 10,
+        "page_end": 10,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\n3 AUTHORIZATION AND LEGAL EXPOSURE\n\nSecurity researchers must comply with all applicable international, national, or\nCBEs internal laws, regulatio",
+        "key_entities": [
+          "2023",
+          "COMMERCIAL BANK OF ETHIOPIA",
+          "Information Systems Security",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "standard procedure",
+          "CBE"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-11",
+        "title": "Page 11",
+        "page_start": 11,
+        "page_end": 11,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE pli}\n\n4 GUIDELINES\n\nUnder this Standard Procedure, “research” means activities in which you:\n\nY Notify CBE as soon as possible after you discover a real",
+        "key_entities": [
+          "COMMERCIAL BANK OF ETHIOPIA",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE",
+          "CBE"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-12",
+        "title": "Page 12",
+        "page_start": 12,
+        "page_end": 12,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\n5 TESTING RULES\n\nSecurity researchers must NOT:\n\n>\n\n>\n\nVv\n\nTest any system or service other than those listed above,\n\nPerform Network Denial of Se",
+        "key_entities": [
+          "2023",
+          "COMMERCIAL BANK OF ETHIOPIA",
+          "Network",
+          "systems",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "CBE",
+          "DoS"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-13",
+        "title": "Page 13",
+        "page_start": 13,
+        "page_end": 13,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\n6 DISCLOSURE\n\nInformation submitted under this Standard Procedure will be used for defensive\npurposes only — to mitigate or remediate vulnerabilit",
+        "key_entities": [
+          "2023",
+          "COMMERCIAL BANK OF ETHIOPIA",
+          "Information Network Security",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "Standard Procedure",
+          "CBE",
+          "INSA"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-14",
+        "title": "Page 14",
+        "page_start": 14,
+        "page_end": 14,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\n7 HOW TO REPORT A VULNERABILITY\n\nTo help triage and prioritize submissions, CBE recommends that your reports shall:\n\n> be in acceptable message fo",
+        "key_entities": [
+          "2023",
+          "COMMERCIAL BANK OF ETHIOPIA",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "CBE",
+          "HTML"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-15",
+        "title": "Page 15",
+        "page_start": 15,
+        "page_end": 15,
+        "summary": "CBE VULNERABILITY DISCLOSURE STANDARD PROCEDURE 2023\n\n8 MISCELLANEOUS\n\n8.1 Enforcement\n\na) All ethical hackers or security researchers, internal or external, have a\nresponsibility to follow this stand",
+        "key_entities": [
+          "2023",
+          "2016",
+          "COMMERCIAL BANK OF ETHIOPIA",
+          "VULNERABILITY DISCLOSURE",
+          "STANDARD PROCEDURE 2023",
+          "standard procedure",
+          "CBE"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      }
+    ]
+  }
+}

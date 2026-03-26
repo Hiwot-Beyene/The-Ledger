@@ -1,0 +1,21 @@
+{
+  "doc_id": "27d6a2bb875d93f4",
+  "document_name": "3408b7ac338b.pdf",
+  "origin_type": "native_digital",
+  "layout_complexity": "multi_column",
+  "language": {
+    "code": "en",
+    "confidence": 0.4
+  },
+  "domain_hint": "financial",
+  "estimated_extraction_cost": "needs_layout_model",
+  "triage_signals": {
+    "avg_char_density": 0.0010377467485310622,
+    "avg_whitespace_ratio": 0.9480527909817128,
+    "avg_image_area_ratio": 0.0,
+    "table_density": 7.014590347923682e-05,
+    "figure_density": 0.0
+  },
+  "selected_strategy": "B",
+  "triage_confidence_score": 1.0
+}

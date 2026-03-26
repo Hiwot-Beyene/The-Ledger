@@ -1,0 +1,400 @@
+openapi: 3.1.0
+info:
+  title: Document Intelligence Refinery API Contract
+  version: 0.2.0
+servers:
+  - url: http://localhost:8000
+paths:
+  /documents/upload:
+    post:
+      summary: Upload a source document to refinery storage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Document accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentRecord'
+
+  /documents:
+    get:
+      summary: List uploaded documents
+      responses:
+        '200':
+          description: Documents list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [documents]
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentRecord'
+
+  /documents/{doc_id}/process:
+    post:
+      summary: Start async processing pipeline for document
+      parameters:
+        - in: path
+          name: doc_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Processing job created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentJobStatus'
+
+  /documents/{doc_id}/status:
+    get:
+      summary: Fetch latest async processing status
+      parameters:
+        - in: path
+          name: doc_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Job status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentJobStatus'
+
+  /documents/{doc_id}/pageindex:
+    get:
+      summary: Return generated PageIndex tree for a processed document
+      parameters:
+        - in: path
+          name: doc_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Page index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageIndex'
+
+  /query:
+    post:
+      summary: Execute LangGraph query flow and return answer with provenance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [doc_ids, query]
+              properties:
+                doc_ids:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                query:
+                  type: string
+                mode:
+                  type: string
+                  enum: [answer, audit]
+                  default: answer
+                model_override:
+                  $ref: '#/components/schemas/ModelOverride'
+      responses:
+        '200':
+          description: Query result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+
+  /config/models:
+    get:
+      summary: Get available providers/models and active selection policy
+      responses:
+        '200':
+          description: Model configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [providers, default_policy]
+                properties:
+                  providers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProviderModelCatalog'
+                  default_policy:
+                    type: string
+
+    post:
+      summary: Update active model selection configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                auto_select:
+                  type: boolean
+                override:
+                  $ref: '#/components/schemas/ModelOverride'
+      responses:
+        '200':
+          description: Updated model settings
+
+  /ledger/{doc_id}:
+    get:
+      summary: Return extraction ledger entries for document
+      parameters:
+        - in: path
+          name: doc_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ledger records
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [entries]
+                properties:
+                  entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ExtractionLedgerEntry'
+
+components:
+  schemas:
+    DocumentRecord:
+      type: object
+      required: [doc_id, document_name, status]
+      properties:
+        doc_id:
+          type: string
+        document_name:
+          type: string
+        status:
+          type: string
+          enum: [uploaded, queued, running, ready, failed]
+
+    DocumentJobStatus:
+      type: object
+      required: [job_id, doc_id, stage, status, progress_percent, updated_at]
+      properties:
+        job_id:
+          type: string
+        doc_id:
+          type: string
+        stage:
+          type: string
+          enum: [triage, extraction, chunking, indexing, completed, failed]
+        status:
+          type: string
+          enum: [queued, running, completed, failed]
+        progress_percent:
+          type: integer
+          minimum: 0
+          maximum: 100
+        message:
+          type: string
+          nullable: true
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+
+    ModelOverride:
+      type: object
+      required: [provider, model_name]
+      properties:
+        provider:
+          type: string
+          enum: [ollama, openrouter]
+        model_name:
+          type: string
+
+    ProviderModelCatalog:
+      type: object
+      required: [provider, models]
+      properties:
+        provider:
+          type: string
+          enum: [ollama, openrouter]
+        models:
+          type: array
+          items:
+            type: string
+
+    ProvenanceCitation:
+      type: object
+      required: [document_name, page_number, bbox, content_hash]
+      properties:
+        document_name:
+          type: string
+        page_number:
+          type: integer
+          minimum: 1
+        bbox:
+          type: array
+          minItems: 4
+          maxItems: 4
+          items:
+            type: number
+        content_hash:
+          type: string
+        excerpt:
+          type: string
+
+    ModelSelectionDecision:
+      type: object
+      required: [provider, model_name, mode, reasoning]
+      properties:
+        provider:
+          type: string
+          enum: [ollama, openrouter]
+        model_name:
+          type: string
+        mode:
+          type: string
+          enum: [auto, user_override]
+        reasoning:
+          type: string
+
+    QueryResponse:
+      type: object
+      required: [query_id, answer, provenance, tool_sequence, model_decision]
+      properties:
+        query_id:
+          type: string
+        answer:
+          type: string
+        verification_status:
+          type: string
+          enum: [verified, partial, unverifiable]
+          nullable: true
+        provenance:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProvenanceCitation'
+        tool_sequence:
+          type: array
+          items:
+            type: string
+        model_decision:
+          $ref: '#/components/schemas/ModelSelectionDecision'
+        langsmith_trace_id:
+          type: string
+          nullable: true
+
+    PageIndexNode:
+      type: object
+      required: [section_id, title, page_start, page_end, child_sections]
+      properties:
+        section_id:
+          type: string
+        title:
+          type: string
+        page_start:
+          type: integer
+          minimum: 1
+        page_end:
+          type: integer
+          minimum: 1
+        summary:
+          type: string
+        key_entities:
+          type: array
+          items:
+            type: string
+        data_types_present:
+          type: array
+          items:
+            type: string
+        child_sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/PageIndexNode'
+
+    PageIndex:
+      type: object
+      required: [doc_id, root]
+      properties:
+        doc_id:
+          type: string
+        root:
+          $ref: '#/components/schemas/PageIndexNode'
+
+    ExtractionLedgerEntry:
+      type: object
+      required:
+        - timestamp
+        - doc_id
+        - document_name
+        - strategy_sequence
+        - final_strategy
+        - confidence_score
+        - cost_estimate_usd
+        - processing_time_ms
+        - budget_cap_usd
+        - budget_status
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        doc_id:
+          type: string
+        document_name:
+          type: string
+        strategy_sequence:
+          type: array
+          items:
+            type: string
+            enum: [A, B, C]
+        final_strategy:
+          type: string
+          enum: [A, B, C]
+        confidence_score:
+          type: number
+          minimum: 0
+          maximum: 1
+        cost_estimate_usd:
+          type: number
+          minimum: 0
+        processing_time_ms:
+          type: integer
+          minimum: 0
+        budget_cap_usd:
+          type: number
+          minimum: 0
+        budget_status:
+          type: string
+          enum: [under_cap, cap_reached]
+        notes:
+          type: string
+          nullable: true

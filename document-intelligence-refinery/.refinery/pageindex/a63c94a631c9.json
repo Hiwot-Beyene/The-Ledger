@@ -1,0 +1,1978 @@
+{
+  "doc_id": "a63c94a631c9",
+  "root": {
+    "section_id": "root-a63c94a631c9",
+    "title": "tax_expenditure_ethiopia_2021_22.pdf",
+    "page_start": 1,
+    "page_end": 60,
+    "summary": "Import tax expenditure report : FY 2018/19 – 2020/21 Tax Policy Directorate, Ministry of Finance, Ethiopia September 2022 Figure 2 Import tax expenditure report: FY 2018/19 – 2020/21 Preface This repo",
+    "key_entities": [
+      "FY 2018",
+      "FY 2020",
+      "FY 2019",
+      "2018/19",
+      "2020/21",
+      "2019/20",
+      "2016/17",
+      "September 2022",
+      "August 2020",
+      "2018",
+      "2020",
+      "2022"
+    ],
+    "data_types_present": [
+      "narrative"
+    ],
+    "child_sections": [
+      {
+        "section_id": "sec-1",
+        "title": "Import",
+        "page_start": 1,
+        "page_end": 41,
+        "summary": "Import tax expenditure report : FY 2018/19 – 2020/21 Tax Policy Directorate, Ministry of Finance, Ethiopia September 2022 Figure 2 Import tax expenditure report: FY 2018/19 – 2020/21 Preface This repo",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "FY 2019",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "September 2022",
+          "2018"
+        ],
+        "data_types_present": [
+          "tables",
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-2",
+        "title": "They",
+        "page_start": 2,
+        "page_end": 41,
+        "summary": "They also thank the staff of the Ministry of Finance Tax Policy Directorate and the staff of the Ethiopian Customs Commission for providing access to data and clarifying certain data issues. They acco",
+        "key_entities": [
+          "FY 2018",
+          "FY 2019",
+          "FY 2020",
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019"
+        ],
+        "data_types_present": [
+          "tables",
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-3",
+        "title": "The",
+        "page_start": 2,
+        "page_end": 45,
+        "summary": "The authors would like to thank David Phillips (IFS) for useful comments and feedback. The report uses the revenue forgone method and does not attempt to incorporate the behavioural or compliance effe",
+        "key_entities": [
+          "FY 2018",
+          "2019/20",
+          "2020/21",
+          "2018/19",
+          "2016/17",
+          "2017/18",
+          "April 2020",
+          "2019"
+        ],
+        "data_types_present": [
+          "tables",
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-4",
+        "title": "This",
+        "page_start": 2,
+        "page_end": 46,
+        "summary": "This report has been funded by UK aid from the UK government through a grant to TaxDev.  Ministry of Finance, Ethiopia Figure 3 Import tax expenditure report: FY 2018/19 – 2020/21 Contents Executive",
+        "key_entities": [
+          "FY 2018",
+          "FY 2019",
+          "FY 2020",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2021/22",
+          "2018"
+        ],
+        "data_types_present": [
+          "tables",
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-5",
+        "title": "Executive",
+        "page_start": 3,
+        "page_end": 3,
+        "summary": "4 1.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-6",
+        "title": "Estimating",
+        "page_start": 3,
+        "page_end": 3,
+        "summary": "13 3.3 Data ............................................................................................................................",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-7",
+        "title": "Data",
+        "page_start": 3,
+        "page_end": 3,
+        "summary": "15 4.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-8",
+        "title": "Appendices",
+        "page_start": 3,
+        "page_end": 3,
+        "summary": "43 A.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-9",
+        "title": "References",
+        "page_start": 3,
+        "page_end": 3,
+        "summary": "59  Ministry of Finance, Ethiopia 4 Import tax expenditure report: FY 2018/19 – 2020/21 Executive summary Understanding, estimating and reporting on tax expenditures is an important exercise in publi",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-10",
+        "title": "Introduction",
+        "page_start": 3,
+        "page_end": 6,
+        "summary": "Introduction .......................................................................................................................... 6 2. Introduction This report provides estimates of federal impo",
+        "key_entities": [
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019",
+          "2020"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-11",
+        "title": "Policy",
+        "page_start": 3,
+        "page_end": 7,
+        "summary": "Policy rationale for and issues with tax expenditures ....................................................... 7 3. Policy rationale for and issues with tax expenditures The government of Ethiopia has",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-12",
+        "title": "Definitions",
+        "page_start": 3,
+        "page_end": 9,
+        "summary": "Definitions and data ............................................................................................................. 9 3.1 Defining the benchmark tax system .............................",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-13",
+        "title": "Defining",
+        "page_start": 3,
+        "page_end": 9,
+        "summary": "9 3.2 Estimating tax expenditures ....................................................................................... Defining the appropriate benchmark involves a number of judgement calls which",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-14",
+        "title": "Overall",
+        "page_start": 3,
+        "page_end": 27,
+        "summary": "16 4.2 Customs duty .............................................................................................................. Overall excise duty expenditures exhibited a very large increase in F",
+        "key_entities": [
+          "FY 2020",
+          "FY 2019",
+          "2020/21",
+          "2019/20",
+          "2020",
+          "2019",
+          "9 billion"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-15",
+        "title": "Conclusions",
+        "page_start": 3,
+        "page_end": 41,
+        "summary": "Conclusions and recommendations ................................................................................... 41 Appendices ......................................................................",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019",
+          "2020"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-16",
+        "title": "Negative",
+        "page_start": 3,
+        "page_end": 44,
+        "summary": "Negative tax expenditures .......................................................................................... 43 B. Negative tax expenditures In the main text of this report, we study positive",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020",
+          "2019"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-17",
+        "title": "Details",
+        "page_start": 3,
+        "page_end": 44,
+        "summary": "Details on the calculation of indirect effects of tax expenditures............................... 44 C. Details are given in Box 4.1 below. Details on the calculation of indirect effects of tax expend",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-18",
+        "title": "Alternative",
+        "page_start": 3,
+        "page_end": 45,
+        "summary": "Alternative measures of tax expenditures .................................................................. 45 D. In the context of Ethiopian import tax expenditures, two alternatives to our approach",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-19",
+        "title": "Duplicate",
+        "page_start": 3,
+        "page_end": 46,
+        "summary": "Duplicate records in customs microdata .................................................................... 46 E. Duplicate Columns:  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |",
+        "key_entities": [
+          "FY 2017",
+          "FY 2019",
+          "2017/18",
+          "2019/20",
+          "2017",
+          "2019",
+          "Ethiopian Customs Commission"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-20",
+        "title": "Supplementary",
+        "page_start": 3,
+        "page_end": 49,
+        "summary": "Supplementary tables ................................................................................................. 49 References ...................................................................",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-21",
+        "title": "Excise",
+        "page_start": 3,
+        "page_end": 51,
+        "summary": "27 4.4 VAT ............................................................................................................................ Excise on imports Excise rates are set by Proclamation No. Excis",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020",
+          "2019"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-22",
+        "title": "VAT",
+        "page_start": 3,
+        "page_end": 53,
+        "summary": "33 4.5 Surtax ......................................................................................................................... (It does not cover withholding tax, which is not designed as a f",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "FY 2019",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020"
+        ],
+        "data_types_present": [
+          "tables",
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-23",
+        "title": "Surtax",
+        "page_start": 3,
+        "page_end": 54,
+        "summary": "36 5. Surtax on imports Surtax is governed by Council of Ministers Regulation No. Surtax expenditures have no indirect effect on the collection of other taxes, as it is applied last in the calculation",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "FY 2019",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-24",
+        "title": "Commodity",
+        "page_start": 3,
+        "page_end": 56,
+        "summary": "Commodity categorisation based on two-digit HS code ............................................ 48 F. Commodity category Exemp- Rate Indirect Indirect Indirect Higher- Total tions reduc- effect effec",
+        "key_entities": [
+          "2018/19",
+          "2018"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-25",
+        "title": "Customs",
+        "page_start": 3,
+        "page_end": 58,
+        "summary": "22 4.3 Excise duty ................................................................................................................. Shipment-level differences between estimated benchmark collections",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "FY 2019",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-26",
+        "title": "Tax",
+        "page_start": 3,
+        "page_end": 60,
+        "summary": "Tax expenditure estimates ................................................................................................. 16 4.1 Overall tax expenditures ............................................",
+        "key_entities": [
+          "FY 2020",
+          "FY 2018",
+          "FY 2019",
+          "2020/21",
+          "2018/19",
+          "2019/20",
+          "2020",
+          "2018"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-27",
+        "title": "Where",
+        "page_start": 4,
+        "page_end": 4,
+        "summary": "In addition to estimating overall tax expenditures and tax expenditures for each tax type, it is useful to understand the source of tax expenditures.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-28",
+        "title": "Estimates",
+        "page_start": 4,
+        "page_end": 12,
+        "summary": "Estimates by categories of commodities can help the government assess whether expenditures are in line with development objectives. Estimates of VAT expenditures do not account for deductibility and s",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-29",
+        "title": "ETB",
+        "page_start": 4,
+        "page_end": 37,
+        "summary": "Of total import tax expenditures in FY 2020/21, VAT expenditures constituted the largest share at 37% of the total (ETB 44.6 billion), followed by customs duty expenditures at 32% (ETB 38.9 billion),",
+        "key_entities": [
+          "FY 2020",
+          "FY 2018",
+          "2020/21",
+          "2018/19",
+          "2019/20",
+          "2020",
+          "2018",
+          "2019"
+        ],
+        "data_types_present": [
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-30",
+        "title": "Commission",
+        "page_start": 4,
+        "page_end": 43,
+        "summary": "It covers the four taxes levied on imports: customs duty, excise duty, VAT and surtax. as the benchmark tax system, which can be calculated from theoretical collection amounts that are provided in the",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2022",
+          "2012",
+          "2017",
+          "2018",
+          "2020"
+        ],
+        "data_types_present": [
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-31",
+        "title": "For",
+        "page_start": 5,
+        "page_end": 46,
+        "summary": "For vehicles, these high expenditures primarily arise from much higher statutory surtax rates since FY 2020/21 that have not been consistently applied. For animal and vegetable fats (largely palm oil)",
+        "key_entities": [
+          "FY 2020",
+          "FY 2018",
+          "FY 2019",
+          "2020/21",
+          "2018/19",
+          "2019/20",
+          "2020",
+          "2018"
+        ],
+        "data_types_present": [
+          "tables",
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-32",
+        "title": "Future",
+        "page_start": 6,
+        "page_end": 6,
+        "summary": "Future iterations of this report should aim to incorporate all tax expenditures.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-33",
+        "title": "April",
+        "page_start": 6,
+        "page_end": 6,
+        "summary": "It found that the estimated revenue forgone on imports as a share of GDP was 2.74% in FY 2018/19.",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2018"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-34",
+        "title": "GDP",
+        "page_start": 6,
+        "page_end": 17,
+        "summary": "(At 3.7%, our main estimate for FY 2018/19 tax expenditures is somewhat larger; however, it is likely that this estimate is inflated by up to 1.1 percentage points as a result of double-counting of sh",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019",
+          "2020",
+          "systems"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-35",
+        "title": "Exemptions",
+        "page_start": 6,
+        "page_end": 23,
+        "summary": "Exemptions and various other concessions that constitute tax expenditures exist for domestic direct taxes and domestic indirect taxes as well. However, the transaction-level microdata necessary for re",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-36",
+        "title": "Section",
+        "page_start": 6,
+        "page_end": 44,
+        "summary": "Section 2 provides an overview of the policy rationales for and the drawbacks of tax expenditures. Section 3 describes how tax expenditures are defined and estimated. Section 4 provides estimates of t",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance",
+          "Section 2",
+          "Section 3"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-37",
+        "title": "Appendix",
+        "page_start": 6,
+        "page_end": 58,
+        "summary": " Ministry of Finance, Ethiopia 7 Import tax expenditure report: FY 2018/19 – 2020/21 2. 𝑖𝑡 For VAT, the tax expenditure is computed analogously as 𝑇𝐸𝑣 = (𝜏𝑏𝑣 −𝜏𝑎𝑣)(1+𝜏𝑎𝑒)(1+𝜏𝑎𝑐)𝐶𝐼𝐹 +𝐼𝐸𝑣 𝑖𝑡 𝑖𝑡 𝑖𝑡 𝑖𝑡 𝑖",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020",
+          "2019",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-38",
+        "title": "Various",
+        "page_start": 7,
+        "page_end": 7,
+        "summary": "Various incentive packages for investors and exporters are currently in place.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-39",
+        "title": "Investors",
+        "page_start": 7,
+        "page_end": 7,
+        "summary": "Investors enjoy a wide range of incentives as per Council of Ministers Regulation No.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-40",
+        "title": "Exporters",
+        "page_start": 7,
+        "page_end": 7,
+        "summary": "Exporters also enjoy various duty and tax privileges through duty draw-back, voucher and bonded warehouse schemes (as per Proclamation No.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-41",
+        "title": "These",
+        "page_start": 7,
+        "page_end": 48,
+        "summary": "These exemptions are sometimes used to stabilise the domestic price of certain imported commodities such as cooking oil. Furthermore, ad hoc exemptions are granted to certain local producers. These in",
+        "key_entities": [
+          "FY 2018",
+          "FY 2019",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020",
+          "2017"
+        ],
+        "data_types_present": [
+          "tables",
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-42",
+        "title": "Regulation",
+        "page_start": 7,
+        "page_end": 59,
+        "summary": "270/2012, including duty- free (exempted from customs duty and tax) imports of capital/investment goods, construction materials, motor vehicles, and spare parts whose value is not more than 15% of the",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2017/10/",
+          "2013/01/",
+          "2012",
+          "2017",
+          "2018"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-43",
+        "title": "Proclamation",
+        "page_start": 7,
+        "page_end": 60,
+        "summary": "768/2012). On top of that, through its power and mandate, the Ministry of Finance grants ad hoc exemptions from the payment of import taxes. 768/2012, Proclamation No. 886/2015 and Council of Minister",
+        "key_entities": [
+          "1186/2020",
+          "2012/10/",
+          "0768-2012",
+          "2014/09/",
+          "2017/04/",
+          "August 2020",
+          "2012",
+          "2015"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-44",
+        "title": "Even",
+        "page_start": 8,
+        "page_end": 8,
+        "summary": "Even though the law stipulates that businesses benefiting from tax incentives are to file tax returns, businesses with no tax liability do not usually file their returns, making a comprehensive tax ex",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-45",
+        "title": "When",
+        "page_start": 9,
+        "page_end": 9,
+        "summary": "When bilateral or multilateral agreements regulate tax rates for specific countries of origin, these tax rates enter the benchmark system and do not count as expenditures (International Monetary Fund,",
+        "key_entities": [
+          "2019"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-46",
+        "title": "Monetary",
+        "page_start": 9,
+        "page_end": 9,
+        "summary": "In addition, exemptions given to diplomats and international organisations in line with international law and the Vienna Conventions are considered part of the benchmark. In particular, this approach",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-47",
+        "title": "Conventions",
+        "page_start": 9,
+        "page_end": 9,
+        "summary": "In order to avoid negative tax expenditures, actual applied tax rates that are higher than the standard rates in the relevant proclamation or regulation are considered part of the benchmark tax system",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-48",
+        "title": "Lower",
+        "page_start": 9,
+        "page_end": 9,
+        "summary": "Lower rates and exemptions are examined in separate analyses for customs duty, where both are common.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-49",
+        "title": "Second",
+        "page_start": 9,
+        "page_end": 30,
+        "summary": "Second schedule customs duty and surtax rates are considered tax expenditures in our main analysis. Second schedule rates are preferential customs and surtax rates granted to local manufacturers impor",
+        "key_entities": [
+          "2019/20",
+          "2020/21",
+          "2016",
+          "2019",
+          "2020",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-50",
+        "title": "Other",
+        "page_start": 9,
+        "page_end": 58,
+        "summary": "Other deviations from standard rates are taken to give rise to tax expenditures. cement) 1,155.92 1,147.61 687.23 Pharmaceuticals 4,071.33 2,523.44 3,508.65 Fertiliser 2,135.63 2,611.74 3,563.71 Plast",
+        "key_entities": [
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019",
+          "2020"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-51",
+        "title": "Final",
+        "page_start": 10,
+        "page_end": 10,
+        "summary": "Final consumer goods are usually charged at higher rates, while raw materials and intermediate goods (including semi- knocked-down products) are charged at lower rates.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-52",
+        "title": "COMESA",
+        "page_start": 10,
+        "page_end": 10,
+        "summary": " Ministry of Finance, Ethiopia 11 Import tax expenditure report: FY 2018/19 – 2020/21 o Ethiopia has a bilateral trade agreement with Sudan granting duty-free access for goods originating from Sudan.",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-53",
+        "title": "All",
+        "page_start": 10,
+        "page_end": 11,
+        "summary": "All tax expenditures likely lead to higher income tax collection, as the lower cost of imported inputs leads to higher profits and earnings. Thus, the cost of tax expenditures calculated in this repor",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-54",
+        "title": "Ethiopia",
+        "page_start": 10,
+        "page_end": 51,
+        "summary": "o Ethiopia is a member of the Common Market for Eastern and Southern Africa (COMESA) Preferential Trade Agreement where it grants 10% rate reductions for goods originating in a COMESA country and comp",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020",
+          "2019",
+          "Ethiopian Customs Commission"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-55",
+        "title": "Sudan",
+        "page_start": 11,
+        "page_end": 11,
+        "summary": "▪ Duty-free privileges for international organisations and their foreign personnel, under the Vienna Conventions, are part of the benchmark system.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-56",
+        "title": "Imports",
+        "page_start": 11,
+        "page_end": 13,
+        "summary": "Imports by diplomats, consular officers, and their immediate family members are exempt from all customs duty. ▪ Duty-free privileges for international aid organisations outside of the UN system (e.g.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-57",
+        "title": "CIF",
+        "page_start": 11,
+        "page_end": 17,
+        "summary": "▪ The benchmark excise rates before August 2020 are specified in Proclamation No. ▪ The benchmark VAT rate on all imports is 15%, except for those which are exempt from the VAT payment as per Proclama",
+        "key_entities": [
+          "August 2020",
+          "2020"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-58",
+        "title": "Deductibility",
+        "page_start": 12,
+        "page_end": 12,
+        "summary": "Deductibility of VAT would also impact the indirect effects of customs duty and excise tax through VAT; on the other hand, the indirect effect of VAT expenditures on surtax would be unaffected by dedu",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-59",
+        "title": "Finance",
+        "page_start": 12,
+        "page_end": 12,
+        "summary": " Ministry of Finance, Ethiopia 13 Import tax expenditure report: FY 2018/19 – 2020/21 The benchmark tax system for surtax on imports is defined as follows: ▪ The unit of taxation for surtax on import",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-60",
+        "title": "Goods",
+        "page_start": 13,
+        "page_end": 13,
+        "summary": "Goods exempted as per Regulation No.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-61",
+        "title": "One",
+        "page_start": 13,
+        "page_end": 47,
+        "summary": "One complication in the Ethiopian import tax system is that customs duty, excise tax, VAT and surtax are charged sequentially, so tax expenditures earlier in the sequence affect the tax base for taxes",
+        "key_entities": [
+          "2020/21",
+          "2020"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-62",
+        "title": "Note",
+        "page_start": 14,
+        "page_end": 14,
+        "summary": "Note that the tax base for excise tax is (1+𝜏𝑎𝑐)𝐶𝐼𝐹 , i.e. the import 𝑖𝑡 𝑖𝑡 value including customs duty. Again, details on the calculation of 𝐼𝐸𝑒 are given in Appendix B.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-63",
+        "title": "There",
+        "page_start": 14,
+        "page_end": 14,
+        "summary": "There are no indirect effects of surtax on other taxes because it is the last tax in the import tax sequence.  Ministry of Finance, Ethiopia 15 Import tax expenditure report: FY 2018/19 – 2020/21 3.3",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance",
+          "Ethiopian Customs Commission"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-64",
+        "title": "During",
+        "page_start": 15,
+        "page_end": 15,
+        "summary": "During this period, the Ethiopian Customs Commission transitioned from the Automated System for Customs Data (ASYCUDA++) to the electronic Customs Management System (eCMS).",
+        "key_entities": [
+          "Ethiopian Customs Commission"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-65",
+        "title": "Due",
+        "page_start": 15,
+        "page_end": 15,
+        "summary": "Due to the transition between the two customs IT systems, some shipments may be recorded twice in our merged data set (once in the data from each system). As a result, the tax expenditures estimated i",
+        "key_entities": [
+          "FY 2018",
+          "FY 2019",
+          "FY 2020",
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-66",
+        "title": "Both",
+        "page_start": 16,
+        "page_end": 20,
+        "summary": "Both relative to GDP and relative to total import value, tax expenditures were lower in FY 2019/20, at 16% of import value and 2.3% of GDP. Both were considerably higher than in FY 2019/20, when the l",
+        "key_entities": [
+          "FY 2019",
+          "2019/20",
+          "2019"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-67",
+        "title": "Figure",
+        "page_start": 16,
+        "page_end": 47,
+        "summary": "Figure 4.1. Figure 4.2. A second alternative benchmark is the definition adopted in the previous Ministry of Finance report on tax expenditures (Ministry of Finance, 2020), which covers the 2016/17, 2",
+        "key_entities": [
+          "2016/17",
+          "2017/18",
+          "2018/19",
+          "2020",
+          "2016",
+          "2017",
+          "2018",
+          "Ministry of Finance report on tax expenditures (Ministry of Finance"
+        ],
+        "data_types_present": [
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-68",
+        "title": "Figures",
+        "page_start": 17,
+        "page_end": 17,
+        "summary": "However, as detailed in Appendix D, there is some evidence that duplicate recording of imports was in fact substantial.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-69",
+        "title": "Planning",
+        "page_start": 17,
+        "page_end": 17,
+        "summary": "In FY 2020/21, shipments eligible for second schedule rates made up slightly less than 1% of pre-tax import value. Furthermore, at 21.4% of import value, tax expenditures on these goods were only slig",
+        "key_entities": [
+          "FY 2020",
+          "2020/21",
+          "2020"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-70",
+        "title": "Code",
+        "page_start": 18,
+        "page_end": 25,
+        "summary": "‘Capita/investment’ Columns:  |  |  |  |  | Imports (CIF value) |  |  | Total expenditure | \n2018/19:  | Capital/investment |  |  | 2,065.91 |  |  | 711.02 |\nSecond schedule:  |  | 23,929.54 |  |  | 4",
+        "key_entities": [
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-71",
+        "title": "Vehicle",
+        "page_start": 18,
+        "page_end": 30,
+        "summary": "Vehicle imports accounted for 19.1% of tax expenditures in FY 2020/21, followed by animal or vegetable fats (18.1%) and non-electrical machinery (13.5%). In the previous fiscal year, tax expenditures",
+        "key_entities": [
+          "FY 2020",
+          "FY 2019",
+          "FY 2018",
+          "2020/21",
+          "2019/20",
+          "2018/19",
+          "2020",
+          "2019"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-72",
+        "title": "Table",
+        "page_start": 18,
+        "page_end": 56,
+        "summary": "Table 4.1. Table 4.2. Table 4.3. Table 4.4.  Ministry of Finance, Ethiopia 49 Import tax expenditure report: FY 2018/19 – 2020/21 Table E.1. Table F.1. Table F.2. Table F.3. Table F.4. Table F.5.",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-73",
+        "title": "Assumes",
+        "page_start": 18,
+        "page_end": 58,
+        "summary": "Assumes no duplicate reporting of transactions across customs IT systems (see Appendix D). Assumes no duplicate reporting of transactions across customs IT systems (see Appendix D). Assumes no duplica",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-74",
+        "title": "Prepared",
+        "page_start": 19,
+        "page_end": 57,
+        "summary": "sugar) 7,508.84 4,438.81 6,950.20 Mineral oil and fuel 11,296.09 14,084.75 7,138.00 Other mineral products (incl. sugar) 47.7% 36.8% 31.0% Mineral oil and fuel 19.1% 17.2% 17.9% Other mineral products",
+        "key_entities": [
+          "FY 2018",
+          "FY 2019",
+          "FY 2020",
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-75",
+        "title": "Electrical",
+        "page_start": 20,
+        "page_end": 57,
+        "summary": "28.8% 24.0% 23.9% Other machinery 24.4% 22.2% 21.0% Vehicles 33.1% 20.3% 52.3% Aircraft 15.0% 15.0% 15.0% Other transport equipment 14.9% 13.4% 14.1% Furniture 32.2% 29.3% 24.5% Others 21.2% 20.6% 18.",
+        "key_entities": [
+          "2020/21",
+          "2019/20",
+          "2020",
+          "2019"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-76",
+        "title": "Differences",
+        "page_start": 21,
+        "page_end": 21,
+        "summary": "Differences appear to arise primarily from differences in the definition of the benchmark tax system.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-77",
+        "title": "Different",
+        "page_start": 21,
+        "page_end": 21,
+        "summary": "Different estimates of total tax expenditures (in ETB billions) 2018/19 2019/20 2020/21 This report 99.3 78.3 120.7 This report, 68.7 76.4 120.7 eCMS only ECC standard 40.0 45.3 81.4 rates as benchmar",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019",
+          "2020",
+          "2022"
+        ],
+        "data_types_present": [
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-78",
+        "title": "Box",
+        "page_start": 21,
+        "page_end": 30,
+        "summary": "Box 4.1.  Ministry of Finance, Ethiopia 31 Import tax expenditure report: FY 2018/19 – 2020/21 Table 4.8.",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-79",
+        "title": "ECC",
+        "page_start": 22,
+        "page_end": 22,
+        "summary": "ECC standard rates are the same as our benchmark rates for 86% of shipments for customs duty, 98% for excise, 84% for VAT and 83% for surtax. ECC standard rates were used in a recent Ministry of Finan",
+        "key_entities": [
+          "FY 2020",
+          "2020/21",
+          "2021",
+          "2022",
+          "2020",
+          "9 billion",
+          "Ministry of Finance report that evaluated the centralization of the tax exemptions process that took place in 2021 (Ministry of Finance"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-80",
+        "title": "Using",
+        "page_start": 22,
+        "page_end": 22,
+        "summary": "Using ECC standard rates, we obtain overall tax expenditures of ETB 40.0 billion (1.5% of GDP) in 2018/19, ETB 45.3 billion (1.3% of GDP) in 2019/20 and ETB 81.4 billion (1.9% of GDP) in 2020/21.",
+        "key_entities": [
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019",
+          "2020",
+          "0 billion",
+          "19, ETB"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-81",
+        "title": "That",
+        "page_start": 22,
+        "page_end": 22,
+        "summary": "That report found overall tax expenditures of ETB 73.9 billion in 2018/19.",
+        "key_entities": [
+          "2018/19",
+          "2018",
+          "9 billion"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-82",
+        "title": "Most",
+        "page_start": 22,
+        "page_end": 22,
+        "summary": "Most importantly, our estimates for 2018/19 use the 2017 tariff book to derive benchmark tariffs (except for goods whose tariff rates were unspecified in the 2017 tariff book), whereas the previous re",
+        "key_entities": [
+          "2018/19",
+          "2018",
+          "2017",
+          "2012"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-83",
+        "title": "Ministry",
+        "page_start": 22,
+        "page_end": 59,
+        "summary": "Ministry of Finance (2022) and Ministry of Finance (2020) refer to other sources of tax expenditure estimates for Ethiopia (see text). B. D. In FY 2019/20 and FY 2020/21, when the transition to eCMS w",
+        "key_entities": [
+          "FY 2019",
+          "FY 2020",
+          "FY 2021",
+          "2019/20",
+          "2020/21",
+          "2018/19",
+          "6062-5746",
+          "2021/22"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-84",
+        "title": "Rate",
+        "page_start": 23,
+        "page_end": 23,
+        "summary": "Rate reductions are cases where a positive rate was applied below the standard rate.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-85",
+        "title": "Indirect",
+        "page_start": 23,
+        "page_end": 23,
+        "summary": "Indirect effects of customs expenditure on the collection of other import taxes arises because customs duty payable is part of the tax base for all other import taxes.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-86",
+        "title": "Relative",
+        "page_start": 23,
+        "page_end": 33,
+        "summary": "Relative to GDP, customs duty tax expenditures were lower in FY 2019/20 (0.7%) but potentially higher in FY 2018/19 (up to 1.1%). Relative to FY 2018/19 (around 15%) and FY 2019/20 (8%), the importanc",
+        "key_entities": [
+          "FY 2019",
+          "FY 2018",
+          "FY 2020",
+          "2019/20",
+          "2018/19",
+          "2020/21",
+          "2019",
+          "2018"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-87",
+        "title": "Expenditures",
+        "page_start": 24,
+        "page_end": 38,
+        "summary": "Expenditures for capital and investment imports and second schedule imports represented a small share of customs duty expenditures (1.2% and 1.6% of the total customs duty tax expenditure respectively",
+        "key_entities": [
+          "FY 2020",
+          "FY 2018",
+          "2020/21",
+          "2018/19",
+          "2020",
+          "2018",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-88",
+        "title": "Among",
+        "page_start": 24,
+        "page_end": 39,
+        "summary": "Among customs duty expenditures on second schedule imports, the role of rate reductions has declined. Among other categories, electrical machinery accounted for 17.6% and base metals and articles of b",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-89",
+        "title": "Vegetable",
+        "page_start": 26,
+        "page_end": 26,
+        "summary": "- 12.73 23.73 1.08 1,291.00 Animal or vegetable fats 8,415.39 0.30 50.11 1,262.35 816.25 135.72 10,680.12 Prepared food and 911.77 14.57 170.35 137.85 92.62 58.93 1,386.09 beverages (incl.",
+        "key_entities": [],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-90",
+        "title": "Animal",
+        "page_start": 26,
+        "page_end": 52,
+        "summary": "Columns: Commodity category | Exemp- | Rate | Indirect | Indirect | Indirect | Higher- | Total\nPharmaceuticals: 130.56 | - | - | 19.55 | - | - | 150.11\nFertiliser: - | - | - | - | - | - | -\nPlastics a",
+        "key_entities": [],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-91",
+        "title": "Large",
+        "page_start": 30,
+        "page_end": 30,
+        "summary": "Large changes between FY 2019/20 and FY 2020/21 largely reflect much higher excise tax expenditures on vehicle imports (for details on excise tax expenditures on motor vehicles, see Box 4.2).",
+        "key_entities": [
+          "FY 2019",
+          "FY 2020",
+          "2019/20",
+          "2020/21",
+          "2019",
+          "2020"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-92",
+        "title": "Mineral",
+        "page_start": 30,
+        "page_end": 35,
+        "summary": "Mineral oil and fuel represented around 44% in FY 2018/19 and 55% in FY 2019/20, then fell to below 17% in FY 2020/21. Mineral oil and fuel accounted for around 12% of VAT expenditures in FY 2018/19,",
+        "key_entities": [
+          "FY 2018",
+          "FY 2019",
+          "FY 2020",
+          "2018/19",
+          "2019/20",
+          "2020/21",
+          "2018",
+          "2019"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-93",
+        "title": "Plastics",
+        "page_start": 31,
+        "page_end": 31,
+        "summary": "and rubbers 5.68 0.85 0.25 0.04 6.82 Other chemical products 159.90 23.99 15.99 2.40 202.28 Leather and shoes - - - - - Paper and wood products - - - - - Textiles 245.38 36.81 24.53 3.68 310.40 Base m",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-94",
+        "title": "Almost",
+        "page_start": 32,
+        "page_end": 32,
+        "summary": "Almost all of this increase is due to higher excise duty expenditures (including indirect effects) and larger indirect customs duty expenditures through excise.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-95",
+        "title": "Leather",
+        "page_start": 36,
+        "page_end": 49,
+        "summary": "Columns: Commodity category | Direct effect | Indirect effect | Total VAT\nFertiliser: 3,563.71 | - | 3,563.71\nPlastics and rubbers: 561.42 | 37.51 | 598.93\nOther chemical products: 1,672.57 | 67.26 |",
+        "key_entities": [],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-96",
+        "title": "Given",
+        "page_start": 41,
+        "page_end": 41,
+        "summary": "Given the longstanding objective of improving domestic resource mobilisation and the declining tax-to-GDP ratio over recent years, we should continue to monitor and evaluate tax expenditures.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-97",
+        "title": "Whether",
+        "page_start": 41,
+        "page_end": 41,
+        "summary": "Whether costly tax expenditures help accomplish their objectives remains an open question.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-98",
+        "title": "Two",
+        "page_start": 41,
+        "page_end": 41,
+        "summary": "Two product groups that deserve particular attention are motor vehicles and animal and vegetable fats (more than half of which by value is palm oil). Together, these two categories of imports make up",
+        "key_entities": [],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-99",
+        "title": "While",
+        "page_start": 41,
+        "page_end": 41,
+        "summary": "While import taxes are the most important source of revenue for the government, they represented only 39% of federal tax revenues in FY 2020/21. Furthermore, looking at import taxes in isolation means",
+        "key_entities": [
+          "FY 2020",
+          "2020/21",
+          "2020"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-100",
+        "title": "Reporting",
+        "page_start": 42,
+        "page_end": 42,
+        "summary": "Reporting could be improved if the data were more detailed, of higher quality and available earlier. In addition, higher-quality microdata on domestic indirect tax payments and data on domestic direct",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-101",
+        "title": "Includes",
+        "page_start": 44,
+        "page_end": 44,
+        "summary": "Includes indirect effects of tax expenditures Columns:  |  | \n:  |\n:  |\n:  |\n:  | as in the main text.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-102",
+        "title": "Each",
+        "page_start": 44,
+        "page_end": 49,
+        "summary": "the benchmark rate. Each table presents tax expenditure estimates for one of the import taxes broken down into a direct effect (which is the tax expenditure owing to exemptions or rate reductions for",
+        "key_entities": [],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-103",
+        "title": "Comparing",
+        "page_start": 46,
+        "page_end": 46,
+        "summary": "Comparing the two tax expenditure measures by tax type, FY 2018/19 to FY 2020/21 50 40 n o illib 30 B T E 20 10 0 2018/19 2019/20 2020/21 2018/19 2019/20 2020/21 2018/19 2019/20 2020/21 2018/19 2019/2",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020",
+          "2019"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-104",
+        "title": "Revenues",
+        "page_start": 46,
+        "page_end": 46,
+        "summary": "In Figure D.1, we show the implied total import tax collection recorded in the two customs IT systems, as well as actual total import tax collection from the Ministry of Revenues.  Ministry of Financ",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Revenues",
+          "Ministry of Finance",
+          "systems"
+        ],
+        "data_types_present": [
+          "figures",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-105",
+        "title": "Total",
+        "page_start": 47,
+        "page_end": 47,
+        "summary": "Total import tax on shipments reported through the two IT systems compared with actual collection, FY 2018/19 to FY 2020/21 120 100 80 n o illib 60 B T E 40 20 0 2018/19 2019/20 2020/21 Total: eCMS To",
+        "key_entities": [
+          "FY 2018",
+          "FY 2020",
+          "2018/19",
+          "2020/21",
+          "2019/20",
+          "2018",
+          "2020",
+          "2019"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-106",
+        "title": "Actual",
+        "page_start": 47,
+        "page_end": 47,
+        "summary": "from the Ethiopian Customs Commission and the Ministry of Revenues.",
+        "key_entities": [
+          "Ministry of Revenues",
+          "Ethiopian Customs Commission"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-107",
+        "title": "Base",
+        "page_start": 50,
+        "page_end": 51,
+        "summary": "Base metals and articles of 2,687.49 519.01 - 480.97 320.63 48.09 4,056.19 base metal Electrical machinery 3,038.85 493.38 44.29 529.83 352.58 64.62 4,523.55 Other machinery 2,832.72 Columns:  | Pharm",
+        "key_entities": [],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-108",
+        "title": "Paper",
+        "page_start": 52,
+        "page_end": 52,
+        "summary": "Paper and wood products - - - - - Textiles 226.98 34.05 22.58 3.39 287.00 Base metals and articles of base metal - - - - - Electrical machinery 87.83 13.17 8.78 1.32 111.10 Other machinery 8.12 1.22 0",
+        "key_entities": [
+          "2020/21",
+          "2020"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-109",
+        "title": "Others",
+        "page_start": 53,
+        "page_end": 54,
+        "summary": "1,270.03 39.61 1,309.64 2019/20 Animal products 62.83 5.63 68.46 Vegetable products 41.06 3.33 44.39 Animal or vegetable fats 951.24 93.84 1,045.08 Prepared food and beverages (incl. 1,266.49 39.97 1,",
+        "key_entities": [
+          "2019/20",
+          "2019"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-110",
+        "title": "Aircraft",
+        "page_start": 54,
+        "page_end": 54,
+        "summary": "276.63 - 276.63 Other transport equipment 25.28 1.27 26.55 Furniture 385.54 36.97 422.51 Others 938.88 33.31 972.19 2020/21 Animal products 66.58 5.39 71.97 Vegetable products 134.60 8.11 142.71 Anima",
+        "key_entities": [
+          "2020/21",
+          "2020"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-111",
+        "title": "Vehicles",
+        "page_start": 57,
+        "page_end": 58,
+        "summary": "11.9% 4.5% 7.5% 9.2% Aircraft 0.0% 0.0% 0.8% 0.0% 0.4% Other transport 0.0% 0.0% 0.1% 0.1% 0.1% equipment Furniture 4.0% 0.0% 1.2% 2.1% 2.0% Others 3.3% 3.1% 2.7% 1.9% 2.8% 2020/21 Animal products 0.2",
+        "key_entities": [
+          "2020/21",
+          "2020"
+        ],
+        "data_types_present": [
+          "tables",
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-112",
+        "title": "Council",
+        "page_start": 59,
+        "page_end": 59,
+        "summary": "Council of Ministers Regulation No.",
+        "key_entities": [],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-113",
+        "title": "Ethiopian",
+        "page_start": 59,
+        "page_end": 59,
+        "summary": "Ethiopian Revenue and Customs Authority (2017), Ethiopian Customs Guide, http://admin.theiguides.org/Media/Documents/Ethiopia_Customs_Guide.pdf.",
+        "key_entities": [
+          "2017",
+          "Customs Authority"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-114",
+        "title": "International",
+        "page_start": 59,
+        "page_end": 59,
+        "summary": "International Monetary Fund (2019), ‘Tax Expenditure Reporting and Its Use in Fiscal Management: A Guide for Developing Economies’, https://www.imf.org/en/Publications/Fiscal-Affairs-Department-How-To",
+        "key_entities": [
+          "2019/03/27",
+          "2019"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-115",
+        "title": "Developing",
+        "page_start": 59,
+        "page_end": 59,
+        "summary": "Kassim, L. and Mansour, M. (2018), ‘Tax Expenditures Reporting in Developing Countries: An Evaluation’, Revenue d’Économie du Développement, 26(2), 113–67, https://www.cairn.info/revue-d-economie-du-",
+        "key_entities": [
+          "2018"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-116",
+        "title": "Directive",
+        "page_start": 59,
+        "page_end": 59,
+        "summary": "45/2016’.",
+        "key_entities": [
+          "2016"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      },
+      {
+        "section_id": "sec-117",
+        "title": "Schemes",
+        "page_start": 59,
+        "page_end": 59,
+        "summary": " Ministry of Finance, Ethiopia 60 Import tax expenditure report: FY 2018/19 – 2020/21 Proclamation No.",
+        "key_entities": [
+          "FY 2018",
+          "2018/19",
+          "2020/21",
+          "2018",
+          "2020",
+          "Ministry of Finance"
+        ],
+        "data_types_present": [
+          "narrative"
+        ],
+        "child_sections": []
+      }
+    ]
+  }
+}
