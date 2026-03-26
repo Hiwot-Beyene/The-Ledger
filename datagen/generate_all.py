@@ -9,7 +9,9 @@ import argparse, asyncio, csv, json, os, random, sys
 from pathlib import Path
 from faker import Faker
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
+_root = Path(__file__).parent.parent
+sys.path.insert(0, str(_root / "src"))
+sys.path.insert(0, str(_root))
 from datagen.company_generator import generate_companies, TRAJECTORIES
 from datagen.pdf_generator import (generate_income_statement_pdf, generate_balance_sheet_pdf,
                                     generate_application_proposal_pdf)
@@ -49,6 +51,7 @@ CREATE INDEX IF NOT EXISTS idx_events_stream    ON events (stream_id, stream_pos
 CREATE INDEX IF NOT EXISTS idx_events_global    ON events (global_position);
 CREATE INDEX IF NOT EXISTS idx_events_type      ON events (event_type);
 CREATE INDEX IF NOT EXISTS idx_events_recorded  ON events (recorded_at);
+CREATE INDEX IF NOT EXISTS idx_events_recorded_brin ON events USING BRIN (recorded_at);
 CREATE TABLE IF NOT EXISTS event_streams (
     stream_id        TEXT PRIMARY KEY,
     aggregate_type   TEXT NOT NULL,
@@ -58,6 +61,7 @@ CREATE TABLE IF NOT EXISTS event_streams (
     metadata         JSONB NOT NULL DEFAULT '{}'::jsonb
 );
 CREATE INDEX IF NOT EXISTS idx_streams_type ON event_streams (aggregate_type);
+CREATE INDEX IF NOT EXISTS idx_streams_aggregate_archived ON event_streams (aggregate_type, archived_at);
 CREATE TABLE IF NOT EXISTS projection_checkpoints (
     projection_name  TEXT PRIMARY KEY,
     last_position    BIGINT NOT NULL DEFAULT 0,
@@ -73,6 +77,7 @@ CREATE TABLE IF NOT EXISTS outbox (
     attempts         SMALLINT NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_outbox_unpublished ON outbox (created_at) WHERE published_at IS NULL;
+CREATE INDEX IF NOT EXISTS idx_outbox_unpublished_created ON outbox (published_at, created_at) WHERE published_at IS NULL;
 CREATE TABLE IF NOT EXISTS snapshots (
     snapshot_id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     stream_id        TEXT NOT NULL REFERENCES event_streams(stream_id),
@@ -82,6 +87,66 @@ CREATE TABLE IF NOT EXISTS snapshots (
     state            JSONB NOT NULL,
     created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+"""
+
+APPLICATION_SUMMARY_SQL = """
+CREATE TABLE IF NOT EXISTS application_summary (
+    application_id            TEXT PRIMARY KEY,
+    state                     TEXT,
+    applicant_id              TEXT,
+    requested_amount_usd      NUMERIC(18, 2),
+    approved_amount_usd       NUMERIC(18, 2),
+    risk_tier                 TEXT,
+    fraud_score               DOUBLE PRECISION,
+    compliance_status         TEXT,
+    decision                  TEXT,
+    agent_sessions_completed  JSONB NOT NULL DEFAULT '[]'::jsonb,
+    last_event_type           TEXT,
+    last_event_at             TIMESTAMPTZ,
+    human_reviewer_id         TEXT,
+    final_decision_at         TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS idx_app_summary_last_event_at ON application_summary (last_event_at);
+"""
+
+SUMMARY_BACKFILL_SQL = """
+WITH loan_streams AS (
+    SELECT DISTINCT stream_id FROM events WHERE stream_id LIKE 'loan-%'
+),
+first_sub AS (
+    SELECT DISTINCT ON (e.stream_id)
+        e.stream_id,
+        e.payload->>'applicant_id' AS applicant_id,
+        (e.payload->>'requested_amount_usd')::numeric AS requested_amount_usd
+    FROM events e
+    WHERE e.event_type = 'ApplicationSubmitted'
+    ORDER BY e.stream_id, e.stream_position ASC
+),
+last_ev AS (
+    SELECT DISTINCT ON (e.stream_id)
+        e.stream_id,
+        e.event_type AS last_event_type,
+        e.recorded_at AS last_event_at
+    FROM events e
+    INNER JOIN loan_streams ls ON ls.stream_id = e.stream_id
+    ORDER BY e.stream_id, e.stream_position DESC
+)
+INSERT INTO application_summary (
+    application_id, applicant_id, requested_amount_usd, last_event_type, last_event_at
+)
+SELECT replace(ls.stream_id, 'loan-', ''),
+       fs.applicant_id,
+       fs.requested_amount_usd,
+       le.last_event_type,
+       le.last_event_at
+FROM loan_streams ls
+INNER JOIN first_sub fs ON fs.stream_id = ls.stream_id
+INNER JOIN last_ev le ON le.stream_id = ls.stream_id
+ON CONFLICT (application_id) DO UPDATE SET
+    applicant_id = EXCLUDED.applicant_id,
+    requested_amount_usd = EXCLUDED.requested_amount_usd,
+    last_event_type = EXCLUDED.last_event_type,
+    last_event_at = EXCLUDED.last_event_at;
 """
 
 REGISTRY_SQL = """
@@ -136,6 +201,7 @@ async def write_to_db(db_url: str, companies, all_events):
     try:
         await conn.execute(REGISTRY_SQL)
         await conn.execute(EVENT_STORE_SQL)
+        await conn.execute(APPLICATION_SUMMARY_SQL)
         for c in companies:
             await conn.execute("""INSERT INTO applicant_registry.companies
                 (company_id,name,industry,naics,jurisdiction,legal_type,founded_year,employee_count,
@@ -191,6 +257,7 @@ async def write_to_db(db_url: str, companies, all_events):
                 json.dumps(event_dict["payload"]),
                 json.dumps({"seed":True,"generated_by":"datagen/generate_all.py"}),
                 __import__('datetime').datetime.fromisoformat(recorded_at))
+        await conn.execute(SUMMARY_BACKFILL_SQL)
         for name in ["application_summary","agent_performance","compliance_audit"]:
             await conn.execute("""INSERT INTO projection_checkpoints(projection_name,last_position)
                 VALUES($1,0) ON CONFLICT DO NOTHING""", name)
